@@ -23,6 +23,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS bills (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     doctorId INTEGER NOT NULL,
+    patientsNum INTEGER NOT NULL DEFAULT 0,
     totalPrice REAL NOT NULL DEFAULT 0,
     totalQuantity INTEGER NOT NULL DEFAULT 0,
     outstandingAmount REAL DEFAULT 0,

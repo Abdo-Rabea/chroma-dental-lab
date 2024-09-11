@@ -1,5 +1,6 @@
 import Error from '../../ui/Error';
 import Menus from '../../ui/Menus';
+import NoDataFound from '../../ui/NoDataFound';
 import Spinner from '../../ui/Spinner';
 import Table from '../../ui/Table';
 import DoctorRow from './DoctorRow';
@@ -22,6 +23,7 @@ function DoctorTable() {
           <div>الاكشن</div>
         </Table.Header>
 
+        {doctors.length === 0 && <NoDataFound />}
         {/* //* the render props pattern */}
         <Table.Body
           // data={filteredCabins}
@@ -29,7 +31,7 @@ function DoctorTable() {
           render={(doctor) => <DoctorRow doctor={doctor} key={doctor.id} />}
         />
 
-        <Table.Footer>{/* <div>Footer</div> */}</Table.Footer>
+        {/* <Table.Footer><div>Footer</div></Table.Footer> */}
       </Table>
     </Menus>
   );

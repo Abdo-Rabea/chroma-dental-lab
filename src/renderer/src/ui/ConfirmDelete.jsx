@@ -20,21 +20,19 @@ const StyledConfirmDelete = styled.div`
   }
 `;
 
+//* modal is the one that passes onCloseModal
 function ConfirmDelete({ resourceName, onConfirm, disabled, onCloseModal }) {
   return (
     <StyledConfirmDelete>
-      <Heading as="h3">Delete {resourceName}</Heading>
-      <p>
-        Are you sure you want to delete this {resourceName} permanently? This action cannot be
-        undone.
-      </p>
+      <Heading as="h3">حذف {resourceName}</Heading>
+      <p>هل انت متأكد من حذف {resourceName} بصورة دائمة.</p>
 
       <div>
         <Button variation="secondary" disabled={disabled} onClick={onCloseModal}>
-          Cancel
+          إلغاء
         </Button>
         <Button variation="danger" disabled={disabled} onClick={onConfirm}>
-          Delete
+          حذف
         </Button>
       </div>
     </StyledConfirmDelete>

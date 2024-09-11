@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import Table from '../../ui/Table';
 import Button from '../../ui/Button';
 import EditProductPriceForm from './EditProductPriceForm';
+import { useDeleteProduct } from './useDeleteProduct';
+import Modal from '../../ui/Modal';
+import ConfirmDelete from '../../ui/ConfirmDelete';
 const Product = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -16,18 +19,32 @@ const ButtonContainer = styled.div`
 `;
 
 function ProductRow({ product }) {
-  const { id, name, price } = product;
+  const { deleteProduct, isDeletingProduct } = useDeleteProduct();
+  const { id, name } = product;
 
+  function handleDeleteProduct() {
+    deleteProduct(id);
+  }
   return (
     <Table.Row>
       <Product>{name}</Product>
-      {/* make me input */}
       <EditProductPriceForm product={product} />
       <ButtonContainer>
         {/* //todo: resize after adding input field */}
-        <Button variation="danger" size="medium">
-          حذف
-        </Button>
+        <Modal>
+          <Modal.Open opens={id}>
+            <Button variation="danger" size="medium">
+              حذف
+            </Button>
+          </Modal.Open>
+          <Modal.Window name={id}>
+            <ConfirmDelete
+              resourceName={name}
+              onConfirm={handleDeleteProduct}
+              disabled={isDeletingProduct}
+            />
+          </Modal.Window>
+        </Modal>
       </ButtonContainer>
     </Table.Row>
   );

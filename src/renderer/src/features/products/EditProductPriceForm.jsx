@@ -26,7 +26,7 @@ function EditProductPriceForm({ product }) {
   } = useForm();
 
   const { editProduct, isEditingProduct } = useEditProduct();
-  console.log(isEditingProduct);
+
   function onSubmit(data) {
     if (dirtyFields.price) {
       product = { ...product, price: data?.price };

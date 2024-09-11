@@ -26,6 +26,15 @@ function updateProduct(productData) {
   const info = stmt.run(name, price, id);
   return info.changes > 0; // Return true if the update was successful
 }
+
+function deleteProduct(id) {
+  const stmt = db.prepare(`
+        DELETE FROM products WHERE id = ?
+    `);
+  const info = stmt.run(id);
+  return info.changes > 0; // Return true if the deletion was successful
+}
+
 //* boundar
 
 // Function to read a product by ID
@@ -36,17 +45,9 @@ function getProductById(id) {
   return stmt.get(id); // Return the product record or undefined if not found
 }
 
-// Function to delete a product by ID
-function deleteProduct(id) {
-  const stmt = db.prepare(`
-        DELETE FROM products WHERE id = ?
-    `);
-  const info = stmt.run(id);
-  return info.changes > 0; // Return true if the deletion was successful
-}
-
 module.exports = {
   createProduct,
   getProducts,
-  updateProduct
+  updateProduct,
+  deleteProduct
 };

@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { updateProduct } from '../../services/apiProducts';
+import { createProduct } from '../../services/apiProducts';
 
-export function useEditProduct() {
+export function useAddProduct() {
   const queryClient = useQueryClient();
-  const { mutate: editProduct, isPending: isEditingProduct } = useMutation({
-    mutationFn: updateProduct,
+  const { mutate: addProduct, isPending: isAddingProduct } = useMutation({
+    mutationFn: createProduct,
     onSuccess: () => {
-      toast.success(`تم التعديل بنجاح`);
+      toast.success(`تم إضافة المنتج بنجاح`);
       queryClient.invalidateQueries({
         active: true
       });
@@ -17,5 +17,5 @@ export function useEditProduct() {
     }
   });
   //* no need for the error as toast do it
-  return { editProduct, isEditingProduct };
+  return { addProduct, isAddingProduct };
 }

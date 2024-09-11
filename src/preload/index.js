@@ -27,5 +27,6 @@ contextBridge.exposeInMainWorld('deposits', {
 contextBridge.exposeInMainWorld('products', {
   createProduct: productOperations.createProduct,
   getProducts: productOperations.getProducts,
-  updateProduct: productOperations.updateProduct
+  updateProduct: productOperations.updateProduct,
+  deleteProduct: productOperations.deleteProduct
 });

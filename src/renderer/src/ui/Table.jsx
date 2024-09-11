@@ -1,9 +1,8 @@
 import { createContext, useContext } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
-
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
@@ -11,9 +10,17 @@ const StyledTable = styled.div`
 `;
 
 //* so one value -> no redundanty
+
 const CommonRow = styled.div`
   display: grid;
   grid-template-columns: ${(props) => props.columns};
+  ${(props) =>
+    props.maxwidth &&
+    css`
+      @media (max-width: ${props.maxwidth}px) {
+        grid-template-columns: 1fr 2fr 0.5fr;
+      }
+    `}
   column-gap: 2.4rem;
   align-items: center;
   transition: none;
@@ -63,26 +70,26 @@ const Empty = styled.p`
 
 const TableContext = createContext();
 
-function Table({ columns, children }) {
+function Table({ columns, children, maxwidth }) {
   return (
-    <TableContext.Provider value={{ columns }}>
+    <TableContext.Provider value={{ columns, maxwidth }}>
       <StyledTable role="table">{children}</StyledTable>
     </TableContext.Provider>
   );
 }
 
 function Header({ children }) {
-  const { columns } = useContext(TableContext);
+  const { columns, maxwidth } = useContext(TableContext);
   return (
-    <StyledHeader role="row" columns={columns} as="header">
+    <StyledHeader role="row" columns={columns} maxwidth={maxwidth} as="header">
       {children}
     </StyledHeader>
   );
 }
 function Row({ children }) {
-  const { columns } = useContext(TableContext);
+  const { columns, maxwidth } = useContext(TableContext);
   return (
-    <StyledRow role="row" columns={columns}>
+    <StyledRow role="row" columns={columns} maxwidth={maxwidth}>
       {children}
     </StyledRow>
   );

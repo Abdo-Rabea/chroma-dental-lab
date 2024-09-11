@@ -1,26 +1,23 @@
-const sqlite3 = require('better-sqlite3');
-const db = sqlite3('database.db');
+var dbmgr = require('./dbManager');
+var db = dbmgr.db;
 
-// Function to create a new product
-function createProduct(name, price) {
+function createProduct(productData) {
+  const { name, price } = productData;
   const stmt = db.prepare(`
         INSERT INTO products (name, price)
         VALUES (?, ?)
     `);
   const info = stmt.run(name, price);
-  return info.lastInsertRowid; // Return the ID of the newly inserted row
+  return info.lastInsertRowid;
 }
 
-// Function to read a product by ID
-function getProductById(id) {
-  const stmt = db.prepare(`
-        SELECT * FROM products WHERE id = ?
-    `);
-  return stmt.get(id); // Return the product record or undefined if not found
+function getProducts() {
+  const stmt = db.prepare(`SELECT * FROM products`);
+  return stmt.all();
 }
 
-// Function to update a product's information
-function updateProduct(id, name, price) {
+function updateProduct(productData) {
+  const { id, name, price } = productData;
   const stmt = db.prepare(`
         UPDATE products
         SET name = ?, price = ?
@@ -28,6 +25,15 @@ function updateProduct(id, name, price) {
     `);
   const info = stmt.run(name, price, id);
   return info.changes > 0; // Return true if the update was successful
+}
+//* boundar
+
+// Function to read a product by ID
+function getProductById(id) {
+  const stmt = db.prepare(`
+        SELECT * FROM products WHERE id = ?
+    `);
+  return stmt.get(id); // Return the product record or undefined if not found
 }
 
 // Function to delete a product by ID
@@ -38,3 +44,9 @@ function deleteProduct(id) {
   const info = stmt.run(id);
   return info.changes > 0; // Return true if the deletion was successful
 }
+
+module.exports = {
+  createProduct,
+  getProducts,
+  updateProduct
+};

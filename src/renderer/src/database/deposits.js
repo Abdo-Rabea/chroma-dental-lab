@@ -1,7 +1,9 @@
 var dbmgr = require('./dbManager');
 var db = dbmgr.db;
 
-function createDeposit(doctorId, billId, amount) {
+function createDeposit(depositData) {
+  //* this ensures scalability
+  const { doctorId, billId, amount } = depositData;
   const insertDeposit = db.prepare(`
       INSERT INTO deposits (billId, doctorId, amount) 
       VALUES (?, ?, ?)

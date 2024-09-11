@@ -1,5 +1,5 @@
 export async function getDoctors() {
-  let doctors = null;
+  let doctors = [];
   try {
     doctors = await window.doctors.getDoctors();
   } catch (err) {

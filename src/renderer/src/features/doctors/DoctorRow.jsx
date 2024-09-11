@@ -11,7 +11,6 @@ import Form from '../../ui/Form';
 import { useState } from 'react';
 import AddDepositForm from '../deposits/addDepositForm';
 import Modal from '../../ui/Modal';
-//todo: can you formate the currency?
 
 const Doctor = styled.div`
   font-size: 1.6rem;
@@ -34,29 +33,24 @@ const QuantatiyPrice = styled.div`
 `;
 
 function DoctorRow({ doctor }) {
-  const bill = doctor.bill;
-  const [isOpenForm, setIsOpenForm] = useState();
+  const bill = doctor?.bill;
+  const { id: doctorId, fullName, balance } = doctor;
 
-  function handleDeposit() {
-    createDeposit(doctor.id, bill.id, 200.0000055);
-  }
   return (
     <Table.Row role="row">
-      <Doctor>{doctor.fullName}</Doctor>
-      <Wallet>{formatCurrency(doctor.balance)} </Wallet>
+      <Doctor>{fullName}</Doctor>
+      <Wallet>{formatCurrency(balance)} </Wallet>
       {bill ? <PatientsNum>{bill?.patientsNum}</PatientsNum> : <span>&mdash;</span>}
       {bill ? <Quantatiy>{bill?.totalQuantity}</Quantatiy> : <span>&mdash;</span>}
       {bill ? <QuantatiyPrice>{bill?.totalPrice}</QuantatiyPrice> : <span>&mdash;</span>}
       {/* action*/}
       <Modal>
         <Menus.Menu>
-          <Menus.Toggle id={doctor.id} />
-          <Menus.List id={doctor.id}>
+          <Menus.Toggle id={doctorId} />
+          <Menus.List id={doctorId}>
             {bill && (
               <Modal.Open opens="deposit">
-                <Menus.Button icon={<FaMoneyBill />} onClick={() => setIsOpenForm((e) => !e)}>
-                  إيداع مبلغ
-                </Menus.Button>
+                <Menus.Button icon={<FaMoneyBill />}>إيداع مبلغ</Menus.Button>
               </Modal.Open>
             )}
             {bill && <Menus.Button icon={<RiBillFill />}>عرض الفاتورة</Menus.Button>}
@@ -65,9 +59,11 @@ function DoctorRow({ doctor }) {
           </Menus.List>
         </Menus.Menu>
 
-        <Modal.Window name="deposit">
-          <AddDepositForm />
-        </Modal.Window>
+        {bill && (
+          <Modal.Window name="deposit">
+            <AddDepositForm doctorId={doctorId} billId={bill?.id} />
+          </Modal.Window>
+        )}
       </Modal>
     </Table.Row>
   );

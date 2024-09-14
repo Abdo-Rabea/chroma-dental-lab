@@ -10,6 +10,9 @@ const depositOperations = require(
 const productOperations = require(
   path.resolve(process.cwd(), 'src/renderer/src/database/products')
 );
+const purchasesOperations = require(
+  path.resolve(process.cwd(), 'src/renderer/src/database/purchases')
+);
 
 contextBridge.exposeInMainWorld('doctors', {
   createDoctor: (fullName) => doctorOperations.createDoctor(fullName),
@@ -17,7 +20,8 @@ contextBridge.exposeInMainWorld('doctors', {
 });
 
 contextBridge.exposeInMainWorld('bills', {
-  createBill: (doctorId) => billOperations.createBill(doctorId)
+  createBill: billOperations.createBill,
+  getBillById: billOperations.getBillById
 });
 
 contextBridge.exposeInMainWorld('deposits', {
@@ -29,4 +33,9 @@ contextBridge.exposeInMainWorld('products', {
   getProducts: productOperations.getProducts,
   updateProduct: productOperations.updateProduct,
   deleteProduct: productOperations.deleteProduct
+});
+contextBridge.exposeInMainWorld('purchases', {
+  getBillPurchases: purchasesOperations.getBillPurchases,
+  createPurchase: purchasesOperations.createPurchase,
+  updatePurchase: purchasesOperations.updatePurchase
 });

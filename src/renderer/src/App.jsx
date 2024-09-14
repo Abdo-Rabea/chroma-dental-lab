@@ -9,6 +9,7 @@ import GlobalStyles from './styles/GlobalStyles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
+import Bill from './pages/Bill';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,6 +32,7 @@ function App() {
             <Route index element={<Navigate to="doctors" replace />} />
             <Route path="doctors" element={<Doctors />} />
             <Route path="bills" element={<Bills />} />
+            <Route path="bill/:billId" element={<Bill />} />
             <Route path="deposits" element={<Deposits />} />
             <Route path="products" element={<Products />} />
           </Route>

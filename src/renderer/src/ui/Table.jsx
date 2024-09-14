@@ -6,7 +6,7 @@ const StyledTable = styled.div`
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
-  /* overflow: auto; */
+  /* overflow-x: auto; */
 `;
 
 //* so one value -> no redundanty
@@ -21,6 +21,11 @@ const CommonRow = styled.div`
         grid-template-columns: 1fr 2fr 0.5fr;
       }
     `}
+
+  /* //todo: at the right media when the table breaks */
+  /* grid-template-columns:repeat(6, 100px);
+  width: fit-content; */
+
   column-gap: 2.4rem;
   align-items: center;
   transition: none;

@@ -7,7 +7,7 @@ export function useDoctors() {
     data: doctors,
     error
   } = useQuery({
-    queryKey: ['cabins'],
+    queryKey: ['doctors'],
     queryFn: getDoctors
   });
   return { isLoading, doctors, error };

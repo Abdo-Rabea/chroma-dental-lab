@@ -5,6 +5,7 @@ import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
 import { useAddProduct } from './useAddProduct';
 import { useForm } from 'react-hook-form';
+import { PRICE_CONSTRAINTS } from '../../utils/constants';
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -42,18 +43,7 @@ function AddProductForm({ onCloseModal }) {
         />
       </FormRow>
       <FormRow label="السعر" error={errors?.price?.message}>
-        <Input
-          type="text"
-          id="price"
-          {...register('price', {
-            required: 'يجب ادخال السعر',
-            min: {
-              value: 0.01,
-              message: 'يجب ادخال قيمة اكبر من الصفر'
-            },
-            pattern: { value: /^\d+(\.\d{1,2})?$/, message: 'يجب ادخال السعر بصورة صحيحة' }
-          })}
-        />
+        <Input type="text" id="price" {...register('price', PRICE_CONSTRAINTS)} />
       </FormRow>
       <ButtonContainer>
         {/* type is an HTML attribute! */}

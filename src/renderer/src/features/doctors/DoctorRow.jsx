@@ -11,6 +11,7 @@ import Form from '../../ui/Form';
 import { useState } from 'react';
 import AddDepositForm from '../deposits/addDepositForm';
 import Modal from '../../ui/Modal';
+import { useNavigate } from 'react-router-dom';
 
 const Doctor = styled.div`
   font-size: 1.6rem;
@@ -33,6 +34,7 @@ const QuantatiyPrice = styled.div`
 `;
 
 function DoctorRow({ doctor }) {
+  const navigate = useNavigate();
   const bill = doctor?.bill;
   const { id: doctorId, fullName, balance } = doctor;
 
@@ -42,7 +44,11 @@ function DoctorRow({ doctor }) {
       <Wallet>{formatCurrency(balance)} </Wallet>
       {bill ? <PatientsNum>{bill?.patientsNum}</PatientsNum> : <span>&mdash;</span>}
       {bill ? <Quantatiy>{bill?.totalQuantity}</Quantatiy> : <span>&mdash;</span>}
-      {bill ? <QuantatiyPrice>{bill?.totalPrice}</QuantatiyPrice> : <span>&mdash;</span>}
+      {bill ? (
+        <QuantatiyPrice>{formatCurrency(bill?.totalPrice)}</QuantatiyPrice>
+      ) : (
+        <span>&mdash;</span>
+      )}
       {/* action*/}
       <Modal>
         <Menus.Menu>
@@ -53,7 +59,11 @@ function DoctorRow({ doctor }) {
                 <Menus.Button icon={<FaMoneyBill />}>إيداع مبلغ</Menus.Button>
               </Modal.Open>
             )}
-            {bill && <Menus.Button icon={<RiBillFill />}>عرض الفاتورة</Menus.Button>}
+            {bill && (
+              <Menus.Button icon={<RiBillFill />} onClick={() => navigate(`/bill/${bill?.id}`)}>
+                عرض الفاتورة
+              </Menus.Button>
+            )}
             <Menus.Button icon={<IoIosCreate />}>فاتورة جديدة</Menus.Button>
             <Menus.Button icon={<HiTrash />}>حذف الطبيب</Menus.Button>
           </Menus.List>

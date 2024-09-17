@@ -53,6 +53,7 @@ function EditPurchaseForm({ onCloseModal, purchase }) {
   if (isLoading) return <Spinner />;
   if (error) return <Error message="حدث خطأ اثناء تحميل البيانات" />;
 
+  //! adding the the current selected product in case it was deleted
   const selectedProduct = {
     id: purchase.productId,
     name: purchase.productName,
@@ -61,7 +62,6 @@ function EditPurchaseForm({ onCloseModal, purchase }) {
 
   // preparing set of product of efficient lookup;
   const productMap = new Map(products.map((product) => [product.id, product]));
-  //! adding the the current selected product in case it was deleted
   if (!productMap.has(purchase.productId)) {
     productMap.set(purchase.productId, selectedProduct);
     products.push(selectedProduct);
@@ -80,13 +80,12 @@ function EditPurchaseForm({ onCloseModal, purchase }) {
       quantity: Number(data.quantity),
       productName: productMap.get(Number(data.productName))?.name
     };
-    console.log(purchaseData);
-    // editPurchase(purchaseData, {
-    //   onSuccess: () => {
-    //     reset();
-    //     onCloseModal?.();
-    //   }
-    // });
+    editPurchase(purchaseData, {
+      onSuccess: () => {
+        reset();
+        onCloseModal?.();
+      }
+    });
   }
 
   return (

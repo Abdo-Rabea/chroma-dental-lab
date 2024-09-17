@@ -30,7 +30,6 @@ function ProductRow({ product }) {
       <Product>{name}</Product>
       <EditProductPriceForm product={product} />
       <ButtonContainer>
-        {/* //todo: resize after adding input field */}
         <Modal>
           <Modal.Open opens={id}>
             <Button variation="danger" size="medium">

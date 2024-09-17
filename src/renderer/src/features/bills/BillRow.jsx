@@ -6,6 +6,8 @@ import Modal from '../../ui/Modal';
 import Menus from '../../ui/Menus';
 import { RiEdit2Fill } from 'react-icons/ri';
 import EditPurchaseForm from '../purchases/EditPurchaseForm';
+import { useDeletePurchase } from '../purchases/useDeletePurchase';
+import ConfirmDelete from '../../ui/ConfirmDelete';
 
 const ProductName = styled.div`
   font-size: 1.6rem;
@@ -16,6 +18,7 @@ const CommonRow = styled.div`
   font-weight: 600;
 `;
 function BillRow({ purchase }) {
+  const { deletePurchase, isDeletingPurchase } = useDeletePurchase();
   const {
     id: purchaseId,
     productName,
@@ -25,6 +28,11 @@ function BillRow({ purchase }) {
     patientName,
     createdAt
   } = purchase;
+
+  function handleDeletePurchase() {
+    deletePurchase(purchaseId);
+  }
+
   return (
     <Table.Row role="row">
       <ProductName>{productName}</ProductName>
@@ -42,12 +50,21 @@ function BillRow({ purchase }) {
             <Modal.Open opens="editPurchase">
               <Menus.Button icon={<RiEdit2Fill />}>تعديل الحالة</Menus.Button>
             </Modal.Open>
-            <Menus.Button icon={<HiTrash />}>حذف الحالة</Menus.Button>
+            <Modal.Open opens="deletePurchase">
+              <Menus.Button icon={<HiTrash />}>حذف الحالة</Menus.Button>
+            </Modal.Open>
           </Menus.List>
         </Menus.Menu>
 
         <Modal.Window name="editPurchase">
           <EditPurchaseForm purchase={purchase} />
+        </Modal.Window>
+        <Modal.Window name="deletePurchase">
+          <ConfirmDelete
+            resourceName={`الحالة ${patientName}`}
+            onConfirm={handleDeletePurchase}
+            disabled={isDeletingPurchase}
+          />
         </Modal.Window>
       </Modal>
     </Table.Row>

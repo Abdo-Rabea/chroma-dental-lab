@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 const path = require('path');
 
 //database api
@@ -14,6 +14,22 @@ const purchasesOperations = require(
   path.resolve(process.cwd(), 'src/renderer/src/database/purchases')
 );
 
+contextBridge.exposeInMainWorld('electron', {
+  printPage: () => ipcRenderer.send('print') // Send the 'print' message to the main process
+});
+
+//* print stuff
+contextBridge.exposeInMainWorld('electronAPI', {
+  printComponent: async (url, callback) => {
+    let response = await ipcRenderer.invoke('printComponent', url);
+    callback(response);
+  },
+  previewComponent: async (url, callback) => {
+    let response = await ipcRenderer.invoke('previewComponent', url);
+    callback(response);
+  }
+});
+
 contextBridge.exposeInMainWorld('doctors', {
   createDoctor: (fullName) => doctorOperations.createDoctor(fullName),
   getDoctors: doctorOperations.getDoctors
@@ -25,7 +41,9 @@ contextBridge.exposeInMainWorld('bills', {
 });
 
 contextBridge.exposeInMainWorld('deposits', {
-  createDeposit: depositOperations.createDeposit
+  createDeposit: depositOperations.createDeposit,
+  getDepositsByBillId: depositOperations.getDepositsByBillId,
+  deleteDeposit: depositOperations.deleteDeposit
 });
 
 contextBridge.exposeInMainWorld('products', {
@@ -37,5 +55,6 @@ contextBridge.exposeInMainWorld('products', {
 contextBridge.exposeInMainWorld('purchases', {
   getBillPurchases: purchasesOperations.getBillPurchases,
   createPurchase: purchasesOperations.createPurchase,
-  updatePurchase: purchasesOperations.updatePurchase
+  updatePurchase: purchasesOperations.updatePurchase,
+  deletePurchase: purchasesOperations.deletePurchase
 });

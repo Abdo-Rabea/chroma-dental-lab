@@ -2,8 +2,8 @@ import styled, { css } from 'styled-components';
 
 const sizes = {
   small: css`
-    font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 1.3rem;
+    padding: 0.8rem 0.8rem;
     text-transform: uppercase;
     font-weight: 600;
     text-align: center;

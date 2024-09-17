@@ -121,5 +121,6 @@ function updatePurchase(purchaseData) {
 module.exports = {
   getBillPurchases,
   createPurchase,
+  deletePurchase,
   updatePurchase
 };

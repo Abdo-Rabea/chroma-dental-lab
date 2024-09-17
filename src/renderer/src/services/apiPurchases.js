@@ -21,3 +21,11 @@ export async function updatePurchase(purchaseData) {
     throw new Error('تعذر تعديل الحالة');
   }
 }
+
+export async function deletePurchase(purchaseId) {
+  try {
+    return await window.purchases.deletePurchase(purchaseId);
+  } catch (err) {
+    throw new Error('تعذر حذف الحالة');
+  }
+}

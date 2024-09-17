@@ -6,7 +6,12 @@ const StyledTable = styled.div`
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
-  /* overflow-x: auto; */
+  ${(props) =>
+    props.width &&
+    css`
+      width: ${props.width};
+      overflow-x: auto;
+    `}
 `;
 
 //* so one value -> no redundanty
@@ -56,8 +61,9 @@ const StyledBody = styled.section`
 
 const Footer = styled.footer`
   background-color: var(--color-grey-50);
-  display: flex;
-  justify-content: center;
+  /* display: flex;
+  justify-content: flex-start; */
+  /* align-items: center; */
   padding: 1.2rem;
 
   /* This will hide the footer when it contains no child elements. Possible thanks to the parent selector :has 🎉 */
@@ -75,10 +81,12 @@ const Empty = styled.p`
 
 const TableContext = createContext();
 
-function Table({ columns, children, maxwidth }) {
+function Table({ columns, children, maxwidth, width }) {
   return (
     <TableContext.Provider value={{ columns, maxwidth }}>
-      <StyledTable role="table">{children}</StyledTable>
+      <StyledTable width={width} role="table">
+        {children}
+      </StyledTable>
     </TableContext.Provider>
   );
 }

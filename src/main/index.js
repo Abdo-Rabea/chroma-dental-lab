@@ -8,7 +8,7 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
-    show: false,
+    //show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -35,6 +35,14 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
+
+  ipcMain.on('print', () => {
+    mainWindow.webContents.print({
+      silent: false, // Open the print dialog (show preview)
+      printBackground: true, // Include background graphics in the print preview
+      pageSize: 'A4'
+    });
+  });
 }
 
 // This method will be called when Electron has finished
@@ -74,3 +82,67 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+//* print stuff
+const printOptions = {
+  silent: false,
+  printBackground: true,
+  color: true,
+  margin: {
+    marginType: 'printableArea'
+  },
+  landscape: false,
+  pagesPerSheet: 1,
+  collate: false,
+  copies: 1,
+  header: 'Page header',
+  footer: 'Page footer'
+};
+
+//handle print
+ipcMain.handle('printComponent', async (event, url) => {
+  const win = new BrowserWindow({ show: false });
+
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.print(printOptions, (success, failureReason) => {
+      console.log('Print Initiated in Main...');
+      if (!success) console.log(failureReason);
+    });
+  });
+
+  await win.loadURL(url);
+  return 'shown print dialog';
+});
+
+//handle preview
+ipcMain.handle('previewComponent', async (event, url) => {
+  let win = new BrowserWindow({
+    title: 'Print Preview',
+    show: false,
+    autoHideMenuBar: true
+  });
+
+  win.webContents.once('did-finish-load', () => {
+    win.webContents
+      .printToPDF(printOptions)
+      .then((data) => {
+        const buf = Buffer.from(data);
+        data = buf.toString('base64');
+        const url = 'data:application/pdf;base64,' + data;
+
+        win.webContents.on('ready-to-show', () => {
+          win.once('page-title-updated', (e) => e.preventDefault());
+          win.show();
+        });
+
+        win.webContents.on('closed', () => (win = null));
+        win.loadURL(url);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+
+  await win.loadURL(url);
+  return 'shown preview window';
+});

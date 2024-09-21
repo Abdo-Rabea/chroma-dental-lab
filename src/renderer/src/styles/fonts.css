@@ -1,13 +1,13 @@
 /* Normal - 400  */
 @font-face {
   font-family: 'Tajawal-Normal';
-  src: url('./fonts/Tajawal/Tajawal-Regular.ttf');
+  src: url('./fonts/Tajawal/Tajawal-Regular.ttf') format('truetype');
 }
 
 /* Medium - 500 - default in the body*/
 @font-face {
   font-family: 'Tajawal-Medium';
-  src: url('./fonts/Tajawal/Tajawal-Medium.ttf');
+  src: url('./fonts/Tajawal/Tajawal-Medium.ttf') format('truetype');
 }
 
 /* Semi-Bold - 600 */
@@ -20,5 +20,5 @@
 /* Bold - 700 */
 @font-face {
   font-family: 'Tajawal-Bold';
-  src: url('./fonts/Tajawal/Tajawal-Bold.ttf');
+  src: url('./fonts/Tajawal/Tajawal-Bold.ttf') format('truetype');
 }

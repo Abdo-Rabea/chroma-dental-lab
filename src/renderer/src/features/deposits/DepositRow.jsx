@@ -11,6 +11,9 @@ const DateTime = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  @media print {
+    font-size: 1.4rem;
+  }
 `;
 const Time = styled.div`
   color: var(--color-grey-500);

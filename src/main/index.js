@@ -35,14 +35,6 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
-
-  ipcMain.on('print', () => {
-    mainWindow.webContents.print({
-      silent: false, // Open the print dialog (show preview)
-      printBackground: true, // Include background graphics in the print preview
-      pageSize: 'A4'
-    });
-  });
 }
 
 // This method will be called when Electron has finished
@@ -83,20 +75,19 @@ app.on('window-all-closed', () => {
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
 
+// https://www.electronjs.org/docs/latest/api/web-contents#contentsprintoptions-callback
 //* print stuff
 const printOptions = {
   silent: false,
   printBackground: true,
   color: true,
-  margin: {
-    marginType: 'printableArea'
-  },
   landscape: false,
   pagesPerSheet: 1,
   collate: false,
   copies: 1,
-  header: 'Page header',
-  footer: 'Page footer'
+  scaleFactor: 50,
+  // 	11.7 x 16.5 inches
+  pageSize: 'A4'
 };
 
 //handle print
@@ -105,7 +96,6 @@ ipcMain.handle('printComponent', async (event, url) => {
 
   win.webContents.on('did-finish-load', () => {
     win.webContents.print(printOptions, (success, failureReason) => {
-      console.log('Print Initiated in Main...');
       if (!success) console.log(failureReason);
     });
   });
@@ -117,7 +107,7 @@ ipcMain.handle('printComponent', async (event, url) => {
 //handle preview
 ipcMain.handle('previewComponent', async (event, url) => {
   let win = new BrowserWindow({
-    title: 'Print Preview',
+    title: 'معاينة الفاتورة',
     show: false,
     autoHideMenuBar: true
   });

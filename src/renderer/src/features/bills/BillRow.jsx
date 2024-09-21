@@ -11,6 +11,10 @@ import ConfirmDelete from '../../ui/ConfirmDelete';
 
 const ProductName = styled.div`
   font-size: 1.6rem;
+  direction: ltr;
+  @media print {
+    font-size: inherit;
+  }
   font-weight: 600;
   color: var(--color-grey-600);
 `;

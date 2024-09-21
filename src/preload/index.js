@@ -14,10 +14,6 @@ const purchasesOperations = require(
   path.resolve(process.cwd(), 'src/renderer/src/database/purchases')
 );
 
-contextBridge.exposeInMainWorld('electron', {
-  printPage: () => ipcRenderer.send('print') // Send the 'print' message to the main process
-});
-
 //* print stuff
 contextBridge.exposeInMainWorld('electronAPI', {
   printComponent: async (url, callback) => {

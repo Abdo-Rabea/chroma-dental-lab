@@ -12,6 +12,11 @@ const StyledTable = styled.div`
       width: ${props.width};
       overflow-x: auto;
     `}
+  @media print {
+    width: fit-content;
+    overflow: unset;
+    overflow-wrap: anywhere;
+  }
 `;
 
 //* so one value -> no redundanty
@@ -34,6 +39,36 @@ const CommonRow = styled.div`
   column-gap: 2.4rem;
   align-items: center;
   transition: none;
+
+  @media print {
+    grid-template-columns: ${(props) => props.printcolumns};
+    column-gap: 0;
+    min-height: 35px;
+    & > div,
+    & > span {
+      padding-top: auto;
+      /* border-right: 1px solid blue; */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+      /* padding: 5px; */
+      border-left: 1px solid var(--color-grey-100);
+    }
+    & > :first-child {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+    & > :nth-last-child(2) {
+      border-left: none;
+    }
+
+    //* to remove actions column
+    & > :last-child {
+      display: none;
+    }
+  }
 `;
 
 const StyledHeader = styled(CommonRow)`
@@ -45,6 +80,9 @@ const StyledHeader = styled(CommonRow)`
   font-weight: 600;
   font-size: 1.5rem;
   color: var(--color-grey-600);
+  @media print {
+    padding: 0;
+  }
 `;
 
 const StyledRow = styled(CommonRow)`
@@ -53,10 +91,16 @@ const StyledRow = styled(CommonRow)`
   &:not(:last-child) {
     border-bottom: 1px solid var(--color-grey-100);
   }
+  @media print {
+    padding: 0;
+  }
 `;
 
 const StyledBody = styled.section`
   margin: 0.4rem 0;
+  @media print {
+    margin: 0;
+  }
 `;
 
 const Footer = styled.footer`
@@ -81,9 +125,9 @@ const Empty = styled.p`
 
 const TableContext = createContext();
 
-function Table({ columns, children, maxwidth, width }) {
+function Table({ columns, children, maxwidth, width, printcolumns }) {
   return (
-    <TableContext.Provider value={{ columns, maxwidth }}>
+    <TableContext.Provider value={{ columns, maxwidth, printcolumns }}>
       <StyledTable width={width} role="table">
         {children}
       </StyledTable>
@@ -92,17 +136,23 @@ function Table({ columns, children, maxwidth, width }) {
 }
 
 function Header({ children }) {
-  const { columns, maxwidth } = useContext(TableContext);
+  const { columns, maxwidth, printcolumns } = useContext(TableContext);
   return (
-    <StyledHeader role="row" columns={columns} maxwidth={maxwidth} as="header">
+    <StyledHeader
+      role="row"
+      columns={columns}
+      maxwidth={maxwidth}
+      printcolumns={printcolumns}
+      as="header"
+    >
       {children}
     </StyledHeader>
   );
 }
 function Row({ children }) {
-  const { columns, maxwidth } = useContext(TableContext);
+  const { columns, maxwidth, printcolumns } = useContext(TableContext);
   return (
-    <StyledRow role="row" columns={columns} maxwidth={maxwidth}>
+    <StyledRow role="row" columns={columns} maxwidth={maxwidth} printcolumns={printcolumns}>
       {children}
     </StyledRow>
   );

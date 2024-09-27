@@ -17,7 +17,7 @@ function DoctorTable() {
         <Table.Header>
           <div>الاسم</div>
           <div>المحفظة</div>
-          <div>عدد الحالات</div>
+          <div>حساب سابق</div>
           <div>الكمية</div>
           <div>سعر الكمية</div>
           <div>الاكشن</div>

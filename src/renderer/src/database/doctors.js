@@ -54,12 +54,72 @@ function getDoctors() {
   }));
 }
 
-// Function to read a doctor by ID
-function getDoctorById(id) {
-  const stmt = db.prepare(`
-        SELECT * FROM doctors WHERE id = ?
-    `);
-  return stmt.get(id); // Return the doctor record or undefined if not found
+function getDoctorActiveBillById(doctorId) {
+  // Get the doctor's details (without JOIN for bill)
+  const doctor = db
+    .prepare(
+      `
+    SELECT 
+      id,
+      fullName,
+      balance,
+      activeBillId,
+      createdAt
+    FROM doctors
+    WHERE id = ?
+  `
+    )
+    .get(doctorId);
+
+  // If no doctor is found, return null
+  if (!doctor) return null;
+
+  // Initialize doctor object
+  const result = {
+    id: doctor.id,
+    fullName: doctor.fullName,
+    balance: doctor.balance,
+    createdAt: doctor.createdAt,
+    activeBillId: doctor.activeBillId,
+    bill: null // Default to null if no activeBillId
+  };
+
+  // If activeBillId is a number (i.e., not NULL), fetch the corresponding bill
+  if (doctor.activeBillId !== null) {
+    const bill = db
+      .prepare(
+        `
+      SELECT 
+        id,
+        doctorId,
+        patientsNum,
+        totalPrice,
+        totalQuantity,
+        outstandingAmount,
+        balanceSnap,
+        createdAt
+      FROM bills
+      WHERE id = ?
+    `
+      )
+      .get(doctor.activeBillId);
+
+    // If the bill is found, add it to the doctor object
+    if (bill) {
+      result.bill = {
+        id: bill.id,
+        doctorId: bill.doctorId,
+        patientsNum: bill.patientsNum,
+        totalPrice: bill.totalPrice,
+        totalQuantity: bill.totalQuantity,
+        outstandingAmount: bill.outstandingAmount,
+        balanceSnap: bill.balanceSnap,
+        createdAt: bill.createdAt
+      };
+    }
+  }
+
+  return result;
 }
 
 // Function to update a doctor's information
@@ -85,7 +145,8 @@ function deleteDoctor(id) {
 module.exports = {
   createDoctor,
   getDoctors,
-  getDoctorById,
+  getDoctorActiveBillById,
+
   updateDoctor,
   deleteDoctor
 };

@@ -28,7 +28,7 @@ const Amount = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
 `;
-function DepositRow({ deposit }) {
+function DepositRow({ deposit, isActiveBill }) {
   const { deleteDeposit, isDeletingDeposit } = useDeleteDeposit();
 
   const { id, createdAt, amount } = deposit;
@@ -46,7 +46,7 @@ function DepositRow({ deposit }) {
       <ButtonContainer>
         <Modal>
           <Modal.Open opens={id}>
-            <Button variation="danger" size="small">
+            <Button variation="danger" size="small" disabled={isActiveBill === false}>
               حذف
             </Button>
           </Modal.Open>

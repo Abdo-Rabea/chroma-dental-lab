@@ -6,12 +6,14 @@ import { FaMoneyBill } from 'react-icons/fa6';
 import { RiBillFill } from 'react-icons/ri';
 import { IoIosCreate } from 'react-icons/io';
 import { createDeposit } from '../../services/apiDeposits';
-import { formatCurrency } from '../../utils/helpers';
+import { formatCurrency, handleSaveCreateNewBill } from '../../utils/helpers';
 import Form from '../../ui/Form';
 import { useState } from 'react';
 import AddDepositForm from '../deposits/addDepositForm';
 import Modal from '../../ui/Modal';
 import { useNavigate } from 'react-router-dom';
+import { useSaveBill } from '../bills/useSaveBill';
+import { useCreateBill } from '../bills/useCreateBill';
 
 const Doctor = styled.div`
   font-size: 1.6rem;
@@ -23,7 +25,7 @@ const Wallet = styled.div`
   font-weight: 600;
 `;
 
-const PatientsNum = styled.div`
+const OutstandingAmount = styled.div`
   font-weight: 600;
 `;
 const Quantatiy = styled.div`
@@ -36,13 +38,30 @@ const QuantatiyPrice = styled.div`
 function DoctorRow({ doctor }) {
   const navigate = useNavigate();
   const bill = doctor?.bill;
-  const { id: doctorId, fullName, balance } = doctor;
+  const { id: doctorId, fullName, balance, activeBillId } = doctor;
 
+  const { saveBillAsync, isSavingBill } = useSaveBill();
+  const { createBillAsync, isCreatingBill } = useCreateBill();
+  function handleNewBill() {
+    handleSaveCreateNewBill(saveBillAsync, createBillAsync, {
+      doctorId,
+      balance,
+      billId: bill?.id,
+      totalPrice: bill?.totalPrice,
+      outstandingAmount: bill?.outstandingAmount,
+      activeBillId
+    });
+  }
+  // const isLoadingNewBill = isSavingBill || isCreatingBill;
   return (
     <Table.Row role="row">
       <Doctor>{fullName}</Doctor>
       <Wallet>{formatCurrency(balance)} </Wallet>
-      {bill ? <PatientsNum>{bill?.patientsNum}</PatientsNum> : <span>&mdash;</span>}
+      {bill ? (
+        <OutstandingAmount>{formatCurrency(bill?.outstandingAmount)}</OutstandingAmount>
+      ) : (
+        <span>&mdash;</span>
+      )}
       {bill ? <Quantatiy>{bill?.totalQuantity}</Quantatiy> : <span>&mdash;</span>}
       {bill ? (
         <QuantatiyPrice>{formatCurrency(bill?.totalPrice)}</QuantatiyPrice>
@@ -64,7 +83,9 @@ function DoctorRow({ doctor }) {
                 عرض الفاتورة
               </Menus.Button>
             )}
-            <Menus.Button icon={<IoIosCreate />}>فاتورة جديدة</Menus.Button>
+            <Menus.Button icon={<IoIosCreate />} onClick={handleNewBill}>
+              فاتورة جديدة
+            </Menus.Button>
             <Menus.Button icon={<HiTrash />}>حذف الطبيب</Menus.Button>
           </Menus.List>
         </Menus.Menu>

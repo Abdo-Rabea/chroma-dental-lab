@@ -23,7 +23,7 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      {/* <ReactQueryDevtools buttonPosition="bottom-left" position="bottom" /> */}
+      <ReactQueryDevtools buttonPosition="bottom-left" position="bottom" />
 
       <GlobalStyles />
       <HashRouter>

@@ -27,13 +27,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
 });
 
 contextBridge.exposeInMainWorld('doctors', {
-  createDoctor: (fullName) => doctorOperations.createDoctor(fullName),
-  getDoctors: doctorOperations.getDoctors
+  createDoctor: doctorOperations.createDoctor,
+  getDoctors: doctorOperations.getDoctors,
+  getDoctorActiveBillById: doctorOperations.getDoctorActiveBillById //todo: delete
 });
 
 contextBridge.exposeInMainWorld('bills', {
   createBill: billOperations.createBill,
-  getBillById: billOperations.getBillById
+  getBillById: billOperations.getBillById,
+  updateBillAndDoctorBalance: billOperations.updateBillAndDoctorBalance
 });
 
 contextBridge.exposeInMainWorld('deposits', {

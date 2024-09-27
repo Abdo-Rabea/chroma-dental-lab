@@ -13,7 +13,7 @@ import Spinner from '../../ui/Spinner';
 import Error from '../../ui/Error';
 import AddPurchase from '../purchases/AddPurchase';
 import styled from 'styled-components';
-import { formatCurrency } from '../../utils/helpers';
+import { formatCurrency, handleSaveCreateNewBill } from '../../utils/helpers';
 import BillDepositsTable from '../deposits/BillDepositsTable';
 import Modal from '../../ui/Modal';
 import Button from '../../ui/Button';
@@ -21,6 +21,10 @@ import AddDepositForm from '../deposits/addDepositForm';
 import { usePrintPreview } from '../../hooks/usePrintPreview';
 import '../../styles/fonts.css';
 import LabContactInfo from '../../ui/LabContactInfo';
+import { useSaveBill } from './useSaveBill';
+import { useCreateBill } from './useCreateBill';
+import ConfirmDelete from '../../ui/ConfirmDelete';
+import ConfirmCreate from '../../ui/ConfirmCreate';
 // just for bill
 const StyledBillDetails = styled.div`
   display: flex;
@@ -88,6 +92,12 @@ const BillActions = styled.div`
 const Summary = styled.div`
   display: flex;
   gap: 1.2rem;
+  //todo: which is better (just comment print media and make screen for all)
+  @media screen {
+    & > div {
+      flex-wrap: wrap;
+    }
+  }
   @media print {
     flex-direction: column;
   }
@@ -101,6 +111,7 @@ const SummaryBox = styled.div`
   border-radius: 7px;
   font-size: 1.5rem;
   flex-grow: 1;
+
   @media print {
     font-size: 1.42rem;
   }
@@ -121,7 +132,7 @@ const DepositsContainer = styled.div`
 const FooterContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   column-gap: 1.6rem;
 `;
 const CustomHeading = styled(Heading)`
@@ -134,6 +145,8 @@ function BillDetails() {
   const { isLoading, bill, error } = useBill();
   const { isLoading: isLoadingPurchases, purchases, error: purchasesError } = useBillPurchases();
   const { ref, onPreview } = usePrintPreview();
+  const { saveBillAsync, isSavingBill } = useSaveBill();
+  const { createBillAsync, isCreatingBill } = useCreateBill();
 
   if (isLoading || isLoadingPurchases) return <Spinner />;
   if (error || purchasesError) return <Error message="تعذر تحميل الفاتورة" />;
@@ -145,6 +158,17 @@ function BillDetails() {
   );
   const remaining = formatCurrency(formatCurrency(balanceToView) - formatCurrency(requiredToPaid));
 
+  function handleNewBill() {
+    if (!isActiveBill) return;
+    handleSaveCreateNewBill(saveBillAsync, createBillAsync, {
+      doctorId: doctor.id,
+      balance: doctor.balance,
+      billId: bill.id,
+      totalPrice: bill.totalPrice,
+      outstandingAmount: bill.outstandingAmount
+    });
+  }
+  const isLoadingNewBill = isSavingBill || isCreatingBill;
   return (
     <StyledBillDetails ref={ref}>
       <Row type="horizontal" className="no-print">
@@ -158,8 +182,24 @@ function BillDetails() {
       <Row type="horizontal">
         <Heading as="h2">الطبيب: {doctor.fullName} </Heading>
         <BillActions>
-          <Button>حفظ الفاتورة</Button>
           <Button onClick={onPreview}>طباعة الفاتورة</Button>
+          {isActiveBill && (
+            <Modal>
+              <Modal.Open opens={billId}>
+                <Button variation="secondary">
+                  {/*add* disabled here */}
+                  فاتورة جديدة
+                </Button>
+              </Modal.Open>
+              <Modal.Window name={billId}>
+                <ConfirmCreate
+                  resourceName={`إنشاء فاتورة جديدة`}
+                  onConfirm={handleNewBill}
+                  disabled={isLoadingNewBill}
+                />
+              </Modal.Window>
+            </Modal>
+          )}
         </BillActions>
         <LabContactInfo />
       </Row>
@@ -171,6 +211,7 @@ function BillDetails() {
             <Table
               columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
               printcolumns="140px 80px 100px 50px 85px 50px 80px"
+              hidelastcolumn={!isActiveBill}
             >
               <Table.Header>
                 <div>نوع الحالة</div>
@@ -219,7 +260,7 @@ function BillDetails() {
                       </SummaryBox>
                     </Row>
                   </Summary>
-                  <AddPurchase />
+                  {isActiveBill && <AddPurchase />}
                 </FooterContainer>
               </Table.Footer>
             </Table>
@@ -230,18 +271,20 @@ function BillDetails() {
           <PrintTitle>تفاصيل سداد النقدية</PrintTitle>
           <Row type="horizontal" className="no-print">
             <Heading as="h2">الإيداعات</Heading>
-            <Modal>
-              <Modal.Open opens="deposit">
-                <Button style={{ padding: '0.8rem 1.6rem' }} size="medium">
-                  إيداع مبلغ
-                </Button>
-              </Modal.Open>
-              <Modal.Window name="deposit">
-                <AddDepositForm doctorId={doctor.id} billId={bill?.id} />
-              </Modal.Window>
-            </Modal>
+            {isActiveBill && (
+              <Modal>
+                <Modal.Open opens="deposit">
+                  <Button style={{ padding: '0.8rem 1.6rem' }} size="medium">
+                    إيداع مبلغ
+                  </Button>
+                </Modal.Open>
+                <Modal.Window name="deposit">
+                  <AddDepositForm doctorId={doctor.id} billId={bill?.id} />
+                </Modal.Window>
+              </Modal>
+            )}
           </Row>
-          <BillDepositsTable />
+          <BillDepositsTable isActiveBill={isActiveBill} />
         </DepositsContainer>
       </BillDepositsContainer>
     </StyledBillDetails>

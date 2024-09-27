@@ -1,3 +1,4 @@
+import AddDoctor from '../features/doctors/AddDoctor';
 import DoctorTable from '../features/doctors/DoctorTable';
 import Heading from '../ui/Heading';
 import Row from '../ui/Row';
@@ -11,7 +12,7 @@ function Doctors() {
       </Row>
       <Row>
         <DoctorTable />
-        {/* <AddCabin />  */}
+        <AddDoctor />
       </Row>
     </>
   );

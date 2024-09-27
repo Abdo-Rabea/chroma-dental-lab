@@ -4,13 +4,18 @@ import Table from '../../ui/Table';
 import DepositRow from './DepositRow';
 import { useBillDeposits } from './useBillDeposits';
 
-function BillDepositsTable() {
+function BillDepositsTable({ isActiveBill }) {
   const { isLoading, deposits, error } = useBillDeposits();
   if (isLoading) return;
   if (error) <Error message={error.message} />;
   return (
     <>
-      <Table columns="150px 100px auto" width="fit-content" printcolumns="80px 77px">
+      <Table
+        columns="150px 100px auto"
+        width="fit-content"
+        printcolumns="80px 77px"
+        hidelastcolumn={isActiveBill === false}
+      >
         <Table.Header>
           <div>التاريخ</div>
           <div>المبلغ</div>
@@ -21,7 +26,9 @@ function BillDepositsTable() {
         {/* //* the render props pattern */}
         <Table.Body
           data={deposits}
-          render={(deposit) => <DepositRow deposit={deposit} key={deposit.id} />}
+          render={(deposit) => (
+            <DepositRow deposit={deposit} key={deposit.id} isActiveBill={isActiveBill} />
+          )}
         />
         <Table.Footer></Table.Footer>
       </Table>

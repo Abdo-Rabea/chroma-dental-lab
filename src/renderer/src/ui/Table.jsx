@@ -31,6 +31,16 @@ const CommonRow = styled.div`
         grid-template-columns: 1fr 2fr 0.5fr;
       }
     `}
+  ${(props) =>
+    props.hidelastcolumn &&
+    css`
+      @media screen {
+        grid-template-columns: ${props.columns.substring(0, props.columns.lastIndexOf(' '))};
+        & > :last-child {
+          display: none;
+        }
+      }
+    `}
 
   /* //todo: at the right media when the table breaks */
   /* grid-template-columns:repeat(6, 100px);
@@ -125,9 +135,9 @@ const Empty = styled.p`
 
 const TableContext = createContext();
 
-function Table({ columns, children, maxwidth, width, printcolumns }) {
+function Table({ columns, children, maxwidth, width, printcolumns, hidelastcolumn = false }) {
   return (
-    <TableContext.Provider value={{ columns, maxwidth, printcolumns }}>
+    <TableContext.Provider value={{ columns, maxwidth, printcolumns, hidelastcolumn }}>
       <StyledTable width={width} role="table">
         {children}
       </StyledTable>
@@ -136,13 +146,14 @@ function Table({ columns, children, maxwidth, width, printcolumns }) {
 }
 
 function Header({ children }) {
-  const { columns, maxwidth, printcolumns } = useContext(TableContext);
+  const { columns, maxwidth, printcolumns, hidelastcolumn } = useContext(TableContext);
   return (
     <StyledHeader
       role="row"
       columns={columns}
       maxwidth={maxwidth}
       printcolumns={printcolumns}
+      hidelastcolumn={hidelastcolumn}
       as="header"
     >
       {children}
@@ -150,9 +161,15 @@ function Header({ children }) {
   );
 }
 function Row({ children }) {
-  const { columns, maxwidth, printcolumns } = useContext(TableContext);
+  const { columns, maxwidth, printcolumns, hidelastcolumn } = useContext(TableContext);
   return (
-    <StyledRow role="row" columns={columns} maxwidth={maxwidth} printcolumns={printcolumns}>
+    <StyledRow
+      role="row"
+      columns={columns}
+      maxwidth={maxwidth}
+      printcolumns={printcolumns}
+      hidelastcolumn={hidelastcolumn}
+    >
       {children}
     </StyledRow>
   );

@@ -13,6 +13,18 @@ const Input = styled.input`
       border-radius: var(--border-radius-lg);
       font-size: 1.6rem;
     `}
+  ${(props) =>
+    props.size === 'large' &&
+    css`
+      transition: flex-basis 0.2s ease-out;
+      padding: 0.9rem 1.2rem;
+      border-radius: var(--border-radius-lg);
+      font-size: 1.6rem;
+      flex-basis: 30%;
+      &:focus {
+        flex-basis: calc(30% + 5px);
+      }
+    `}
 `;
 
 export default Input;

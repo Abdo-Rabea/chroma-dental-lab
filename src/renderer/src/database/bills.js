@@ -80,7 +80,7 @@ function updateBillAndDoctorBalance(data) {
   const { doctorId, balance, billId, balanceSnap } = data;
   const updateBillStmt = db.prepare(`
     UPDATE bills
-    SET balanceSnap = ?
+    SET balanceSnap = ?, deactivatedAt = datetime('now', 'localtime')
     WHERE id = ?
   `);
 
@@ -103,17 +103,81 @@ function updateBillAndDoctorBalance(data) {
   transaction();
 }
 
-// Function to delete a bill by ID
-function deleteBill(id) {
-  const stmt = db.prepare(`
-        DELETE FROM bills WHERE id = ?
-    `);
-  const info = stmt.run(id);
-  return info.changes > 0; // Return true if the deletion was successful
+function getAllBills() {
+  const query = `
+    SELECT
+      bills.id ,
+      bills.totalPrice,
+      bills.totalQuantity,
+      bills.outstandingAmount,
+      bills.balanceSnap,
+      bills.createdAt,
+      doctors.id AS doctorId,
+      doctors.fullName,
+      doctors.activeBillId,
+      doctors.balance
+    FROM bills
+    JOIN doctors ON bills.doctorId = doctors.id
+    ORDER BY bills.createdAt DESC
+  `;
+
+  const rows = db.prepare(query).all();
+
+  // Map the results to the desired format
+  return rows.map((row) => ({
+    id: row.id,
+    totalPrice: row.totalPrice,
+    totalQuantity: row.totalQuantity,
+    outstandingAmount: row.outstandingAmount,
+    balanceSnap: row.balanceSnap,
+    createdAt: row.createdAt,
+    doctor: {
+      id: row.doctorId,
+      fullName: row.fullName,
+      activeBillId: row.activeBillId,
+      balance: row.balance
+    }
+  }));
+}
+
+/**
+ *
+ * @param {*} id
+ * only deletes the non-active one
+ * all purchases and deposits are deleted by default
+ */
+
+function deleteBill(billId) {
+  // Prepare a statement to check if the bill is the active one
+  const checkActiveBillStmt = db.prepare(`
+    SELECT id 
+    FROM doctors 
+    WHERE activeBillId = ?
+  `);
+
+  // Prepare a statement to delete the bill
+  const deleteBillStmt = db.prepare(`
+    DELETE FROM bills 
+    WHERE id = ?
+  `);
+
+  // Check if the bill is the active one
+  const activeBill = checkActiveBillStmt.get(billId);
+
+  if (activeBill) {
+    throw new Error("Active bill can't be deleted");
+  }
+
+  // Otherwise, delete the bill (cascade will take care of purchases and deposits)
+  deleteBillStmt.run(billId);
+
+  return true; // Return true to indicate successful deletion
 }
 
 module.exports = {
   getBillById,
   createBill,
-  updateBillAndDoctorBalance
+  updateBillAndDoctorBalance,
+  getAllBills,
+  deleteBill
 };

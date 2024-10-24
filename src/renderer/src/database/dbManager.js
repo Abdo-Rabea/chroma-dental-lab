@@ -29,7 +29,8 @@ db.exec(`
     outstandingAmount REAL DEFAULT 0,
     balanceSnap REAL DEFAULT 0, -- setting only for old bill after creating new bill
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Automatically set to current timestamp
-    FOREIGN KEY (doctorId) REFERENCES doctors(id)
+    deactivatedAt TIMESTAMP DEFAULT NULL, -- NULL to ensure the bill isn't deleted
+    FOREIGN KEY (doctorId) REFERENCES doctors(id) ON DELETE CASCADE
   );
 `);
 
@@ -45,7 +46,7 @@ db.exec(`
     color TEXT,
     patientName TEXT,
     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (billId) REFERENCES bills(id)
+    FOREIGN KEY (billId) REFERENCES bills(id) ON DELETE CASCADE
   );
 `);
 
@@ -60,14 +61,21 @@ db.exec(`
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS deposits (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      billId INTEGER NOT NULL,
-      doctorId INTEGER NOT NULL, 
-      amount REAL NOT NULL,
-      createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (billId) REFERENCES bills(id),
-      FOREIGN KEY (doctorId) REFERENCES doctors(id)
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    billId INTEGER NOT NULL,
+    doctorId INTEGER NOT NULL, 
+    amount REAL NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (billId) REFERENCES bills(id) ON DELETE CASCADE,
+    FOREIGN KEY (doctorId) REFERENCES doctors(id)
   );
+`);
+
+// delete bill with deactivated after 1 monthes
+db.exec(`
+  DELETE FROM Bills 
+  WHERE deactivatedAt IS NOT NULL 
+  AND deactivatedAt <= DATE('now', '-1 month', 'localtime');
 `);
 
 // triggers

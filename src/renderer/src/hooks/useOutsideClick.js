@@ -8,16 +8,24 @@ import { useEffect, useRef } from 'react';
  */
 export function useOutsideClick(handler, listenCapturing = true) {
   const ref = useRef();
+  const timeoutRef = useRef();
   useEffect(
     function () {
       function handleClick(e) {
         if (ref.current && !ref.current.contains(e.target)) {
-          handler();
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = setTimeout(() => {
+            console.log('cloosing');
+            handler();
+          }, 0);
         }
       }
       document.addEventListener('click', handleClick, listenCapturing);
 
-      return () => document.removeEventListener('click', handleClick);
+      return () => {
+        document.removeEventListener('click', handleClick);
+        clearTimeout(timeoutRef.current);
+      };
     },
     [handler, listenCapturing]
   );

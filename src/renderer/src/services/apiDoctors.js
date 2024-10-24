@@ -22,3 +22,10 @@ export async function getDoctorActiveBillById(doctorId) {
     throw new Error('تعذر تحميل بيانات الطبيب');
   }
 }
+export async function deleteDoctor(doctorId) {
+  try {
+    await window.doctors.deleteDoctor(doctorId);
+  } catch (err) {
+    throw new Error('تعذر حذف الطبيب');
+  }
+}

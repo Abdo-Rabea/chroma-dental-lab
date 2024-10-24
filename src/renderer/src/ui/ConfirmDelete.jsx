@@ -19,14 +19,25 @@ const StyledConfirmDelete = styled.div`
     gap: 1.2rem;
   }
 `;
-
+const Warning = styled.span`
+  color: var(--color-red-700);
+  margin-top: -2rem;
+  font-size: 1.4rem;
+  /* text-align: left; */
+`;
 //* modal is the one that passes onCloseModal
-function ConfirmDelete({ resourceName, onConfirm, disabled, onCloseModal }) {
+function ConfirmDelete({
+  resourceName,
+  onConfirm,
+  disabled,
+  onCloseModal,
+  secondaryMessage = null
+}) {
   return (
     <StyledConfirmDelete>
       <Heading as="h3">حذف {resourceName}</Heading>
       <p>هل انت متأكد من حذف {resourceName} بصورة دائمة.</p>
-
+      {secondaryMessage && <Warning>{`${secondaryMessage} *`}</Warning>}
       <div>
         <Button variation="secondary" disabled={disabled} onClick={onCloseModal}>
           إلغاء

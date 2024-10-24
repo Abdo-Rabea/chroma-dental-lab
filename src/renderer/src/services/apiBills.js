@@ -6,6 +6,14 @@ export async function getBillById(id) {
   }
 }
 
+export async function getAllBills() {
+  try {
+    return await window.bills.getAllBills();
+  } catch (err) {
+    throw new Error('تعذر تحميل الفواتير');
+  }
+}
+
 //* you are using it before saving only
 export async function updateBillAndDoctorBalance(billData) {
   try {
@@ -21,5 +29,15 @@ export async function createBill(billData) {
     return await window.bills.createBill(billData);
   } catch (err) {
     throw new Error('تعذر انشاء الفاتورة');
+  }
+}
+
+//* you are using it before saving only
+export async function deleteBill(billId) {
+  try {
+    return await window.bills.deleteBill(billId);
+  } catch (err) {
+    console.log(err);
+    throw new Error('تعذر حذف الفاتورة');
   }
 }

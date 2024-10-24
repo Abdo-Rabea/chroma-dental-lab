@@ -1,19 +1,18 @@
 import styled from 'styled-components';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
-import { HiSquare2Stack, HiTrash } from 'react-icons/hi2';
+import { HiMiniSquare3Stack3D, HiTrash } from 'react-icons/hi2';
 import { FaMoneyBill } from 'react-icons/fa6';
 import { RiBillFill } from 'react-icons/ri';
 import { IoIosCreate } from 'react-icons/io';
-import { createDeposit } from '../../services/apiDeposits';
 import { formatCurrency, handleSaveCreateNewBill } from '../../utils/helpers';
-import Form from '../../ui/Form';
-import { useState } from 'react';
 import AddDepositForm from '../deposits/addDepositForm';
 import Modal from '../../ui/Modal';
 import { useNavigate } from 'react-router-dom';
 import { useSaveBill } from '../bills/useSaveBill';
 import { useCreateBill } from '../bills/useCreateBill';
+import { useDeleteDoctor } from './useDeleteDoctor';
+import ConfirmDelete from '../../ui/ConfirmDelete';
 
 const Doctor = styled.div`
   font-size: 1.6rem;
@@ -42,6 +41,7 @@ function DoctorRow({ doctor }) {
 
   const { saveBillAsync, isSavingBill } = useSaveBill();
   const { createBillAsync, isCreatingBill } = useCreateBill();
+  const { deleteDoctor, isDeletingDoctor } = useDeleteDoctor();
   function handleNewBill() {
     handleSaveCreateNewBill(saveBillAsync, createBillAsync, {
       doctorId,
@@ -53,6 +53,9 @@ function DoctorRow({ doctor }) {
     });
   }
   // const isLoadingNewBill = isSavingBill || isCreatingBill;
+  function handleDeleteDoctor() {
+    deleteDoctor(doctorId);
+  }
   return (
     <Table.Row role="row">
       <Doctor>{fullName}</Doctor>
@@ -83,12 +86,32 @@ function DoctorRow({ doctor }) {
                 عرض الفاتورة
               </Menus.Button>
             )}
+            {bill && (
+              <Menus.Button
+                icon={<HiMiniSquare3Stack3D />}
+                onClick={() => navigate(`/bills/?doctor-name=${fullName}`)}
+              >
+                عرض كل الفواتير
+              </Menus.Button>
+            )}
             <Menus.Button icon={<IoIosCreate />} onClick={handleNewBill}>
               فاتورة جديدة
             </Menus.Button>
-            <Menus.Button icon={<HiTrash />}>حذف الطبيب</Menus.Button>
+
+            <Modal.Open opens={'deleteDoctor'}>
+              <Menus.Button icon={<HiTrash />}>حذف الطبيب</Menus.Button>
+            </Modal.Open>
           </Menus.List>
         </Menus.Menu>
+
+        <Modal.Window name={'deleteDoctor'}>
+          <ConfirmDelete
+            resourceName={'الطبيب ' + fullName}
+            onConfirm={handleDeleteDoctor}
+            disabled={isDeletingDoctor}
+            secondaryMessage="سوف يتم حذف كل الفواتير"
+          />
+        </Modal.Window>
 
         {bill && (
           <Modal.Window name="deposit">

@@ -1,5 +1,4 @@
 import { createContext, useContext, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { HiEllipsisVertical } from 'react-icons/hi2';
 import styled from 'styled-components';
 import { useOutsideClick } from '../hooks/useOutsideClick';
@@ -39,10 +38,12 @@ const StyledList = styled.ul`
 
   left: 7px;
   top: 40px;
+
+  min-width: max-content;
 `;
 
 const StyledButton = styled.button`
-  width: max-content;
+  width: 100%;
   background: none;
   border: none;
   padding: 1.2rem 2.4rem;
@@ -76,10 +77,13 @@ function Menus({ children }) {
 
 function Toggle({ id }) {
   const toggleElement = useRef();
+
   const { open, close, openId } = useContext(MenusContext);
-  function handleToggle() {
-    if (openId === id) close();
-    else {
+  function handleToggle(event) {
+    if (openId === id) {
+      close();
+      console.log('closing');
+    } else {
       open(id);
     }
   }

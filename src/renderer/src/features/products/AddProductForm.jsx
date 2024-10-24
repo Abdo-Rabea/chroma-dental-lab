@@ -37,6 +37,7 @@ function AddProductForm({ onCloseModal }) {
         <Input
           type="text"
           id="name"
+          style={{ direction: 'ltr' }}
           {...register('name', {
             required: 'يجب ادخال اسم المنتج'
           })}

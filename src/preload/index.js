@@ -29,13 +29,16 @@ contextBridge.exposeInMainWorld('electronAPI', {
 contextBridge.exposeInMainWorld('doctors', {
   createDoctor: doctorOperations.createDoctor,
   getDoctors: doctorOperations.getDoctors,
-  getDoctorActiveBillById: doctorOperations.getDoctorActiveBillById //todo: delete
+  getDoctorActiveBillById: doctorOperations.getDoctorActiveBillById, //todo: delete
+  deleteDoctor: doctorOperations.deleteDoctor
 });
 
 contextBridge.exposeInMainWorld('bills', {
   createBill: billOperations.createBill,
   getBillById: billOperations.getBillById,
-  updateBillAndDoctorBalance: billOperations.updateBillAndDoctorBalance
+  updateBillAndDoctorBalance: billOperations.updateBillAndDoctorBalance,
+  getAllBills: billOperations.getAllBills,
+  deleteBill: billOperations.deleteBill
 });
 
 contextBridge.exposeInMainWorld('deposits', {
@@ -50,6 +53,7 @@ contextBridge.exposeInMainWorld('products', {
   updateProduct: productOperations.updateProduct,
   deleteProduct: productOperations.deleteProduct
 });
+
 contextBridge.exposeInMainWorld('purchases', {
   getBillPurchases: purchasesOperations.getBillPurchases,
   createPurchase: purchasesOperations.createPurchase,

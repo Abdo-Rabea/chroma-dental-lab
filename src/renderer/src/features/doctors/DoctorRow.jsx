@@ -94,10 +94,10 @@ function DoctorRow({ doctor }) {
                 عرض كل الفواتير
               </Menus.Button>
             )}
-            <Menus.Button icon={<IoIosCreate />} onClick={handleNewBill}>
+            {/* //! i deleted it to fix fault click */}
+            {/* <Menus.Button icon={<IoIosCreate />} onClick={handleNewBill}>
               فاتورة جديدة
-            </Menus.Button>
-
+            </Menus.Button> */}
             <Modal.Open opens={'deleteDoctor'}>
               <Menus.Button icon={<HiTrash />}>حذف الطبيب</Menus.Button>
             </Modal.Open>

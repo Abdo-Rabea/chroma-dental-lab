@@ -57,7 +57,7 @@ function LabContactInfo() {
         <div style={{ fontWeight: 'bold' }}>
           <Chroma>Chroma</Chroma>&nbsp; Dental Lab
         </div>
-        <div>address - address - address</div>
+        <div>talcha - address - address</div>
         <Item>
           <span>Marketing:</span> <MdOutlinePhoneAndroid />
           <FaWhatsapp />

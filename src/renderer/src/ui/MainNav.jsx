@@ -63,12 +63,13 @@ function MainNav() {
             <span>الفواتير</span>
           </StyledNavLink>
         </li>
-        <li>
+        {/* //! i decided to remove it (no use case) */}
+        {/* <li>
           <StyledNavLink to="/deposits">
             <FaWallet />
             <span>الايداعات</span>
           </StyledNavLink>
-        </li>
+        </li> */}
         <li>
           <StyledNavLink to="/products">
             <RiToothFill />

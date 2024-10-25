@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Toaster } from 'react-hot-toast';
 import Bill from './pages/Bill';
+import { DarkModeProvider } from './context/DarkModeContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,44 +23,46 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools buttonPosition="bottom-left" position="bottom" />
+    <DarkModeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools buttonPosition="bottom-left" position="bottom" />
 
-      <GlobalStyles />
-      <HashRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route index element={<Navigate to="doctors" replace />} />
-            <Route path="doctors" element={<Doctors />} />
-            <Route path="bills" element={<Bills />} />
-            <Route path="bill/:billId" element={<Bill />} />
-            <Route path="deposits" element={<Deposits />} />
-            <Route path="products" element={<Products />} />
-          </Route>
-          <Route path="*" element={<PageNotFound />} />
-        </Routes>
-      </HashRouter>
-      <Toaster
-        position="top-center"
-        gutter={12} // the space between the screen and the toast
-        containerStyle={{ margin: '8px' }}
-        toastOptions={{
-          success: {
-            duration: 3000
-          },
-          error: {
-            duration: 5000
-          },
-          style: {
-            fontSize: '16px',
-            maxWidth: '500px',
-            padding: '16px 24px',
-            background: 'var(--color-grey-0)',
-            color: 'var(--color-grey-700)'
-          }
-        }}
-      />
-    </QueryClientProvider>
+        <GlobalStyles />
+        <HashRouter>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route index element={<Navigate to="doctors" replace />} />
+              <Route path="doctors" element={<Doctors />} />
+              <Route path="bills" element={<Bills />} />
+              <Route path="bill/:billId" element={<Bill />} />
+              <Route path="deposits" element={<Deposits />} />
+              <Route path="products" element={<Products />} />
+            </Route>
+            <Route path="*" element={<PageNotFound />} />
+          </Routes>
+        </HashRouter>
+        <Toaster
+          position="top-center"
+          gutter={12} // the space between the screen and the toast
+          containerStyle={{ margin: '8px' }}
+          toastOptions={{
+            success: {
+              duration: 3000
+            },
+            error: {
+              duration: 5000
+            },
+            style: {
+              fontSize: '16px',
+              maxWidth: '500px',
+              padding: '16px 24px',
+              background: 'var(--color-grey-0)',
+              color: 'var(--color-grey-700)'
+            }
+          }}
+        />
+      </QueryClientProvider>
+    </DarkModeProvider>
   );
 }
 

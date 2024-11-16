@@ -1,6 +1,7 @@
 {
   "name": "chroma",
   "version": "1.0.0",
+  "icon": "icon.ico",
   "description": "An Electron application with React",
   "main": "./out/main/index.js",
   "author": "abodrabea.io",
@@ -20,9 +21,11 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "@mui/x-date-pickers": "^7.22.2",
     "@tanstack/react-query": "^5.54.1",
     "@tanstack/react-query-devtools": "^5.54.1",
-    "better-sqlite3": "^11.2.1",
+    "better-sqlite3": "^11.5.0",
+    "dayjs": "^1.11.13",
     "eslint-plugin-react-hooks": "^4.6.2",
     "react-hook-form": "^7.53.0",
     "react-hot-toast": "^2.4.1",

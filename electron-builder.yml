@@ -1,17 +1,18 @@
 appId: com.electron.app
-productName: react
+productName: chroma-dental-lab
 directories:
   buildResources: build
 files:
   - '!**/.vscode/*'
   - '!src/*'
+  # - 'src/renderer/src/database/**'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
   - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
 asarUnpack:
   - resources/**
 win:
-  executableName: react
+  executableName: chroma dental lab
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

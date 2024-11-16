@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import { FaWhatsapp } from 'react-icons/fa';
 import { HiPhone } from 'react-icons/hi';
-import { MdOutlinePhoneAndroid } from 'react-icons/md';
+import { MdLocationOn, MdOutlinePhoneAndroid } from 'react-icons/md';
 import styled from 'styled-components';
 const StyledLabContactInfo = styled.div`
   display: flex;
@@ -57,7 +57,10 @@ function LabContactInfo() {
         <div style={{ fontWeight: 'bold' }}>
           <Chroma>Chroma</Chroma>&nbsp; Dental Lab
         </div>
-        <div>talcha - address - address</div>
+        <Item style={{ marginLeft: '-3px' }}>
+          <MdLocationOn />
+          <span>Mansoura - Talkha</span>
+        </Item>
         <Item>
           <span>Marketing:</span> <MdOutlinePhoneAndroid />
           <FaWhatsapp />

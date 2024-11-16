@@ -95,9 +95,11 @@ function DoctorRow({ doctor }) {
               </Menus.Button>
             )}
             {/* //! i deleted it to fix fault click */}
-            {/* <Menus.Button icon={<IoIosCreate />} onClick={handleNewBill}>
-              فاتورة جديدة
-            </Menus.Button> */}
+            {!bill && (
+              <Menus.Button icon={<IoIosCreate />} onClick={handleNewBill}>
+                فاتورة جديدة
+              </Menus.Button>
+            )}
             <Modal.Open opens={'deleteDoctor'}>
               <Menus.Button icon={<HiTrash />}>حذف الطبيب</Menus.Button>
             </Modal.Open>

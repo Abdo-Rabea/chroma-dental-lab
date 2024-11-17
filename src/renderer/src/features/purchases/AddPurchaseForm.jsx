@@ -11,6 +11,7 @@ import { PRICE_CONSTRAINTS } from '../../utils/constants';
 import { formatCurrency } from '../../utils/helpers';
 import { useParams } from 'react-router-dom';
 import { useAddPurchase } from './useAddPurchase';
+import CustomDatePicker from '../../ui/CustomDatePicker';
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -97,6 +98,9 @@ function AddPurchaseForm({ onCloseModal }) {
         </Select>
       </FormRow>
 
+      <FormRow label="التاريخ" error={'hello'}>
+        <CustomDatePicker />
+      </FormRow>
       <FormRow label="اسم المريض" error={errors?.patientName?.message}>
         <Input type="text" id="patientName" disabled={false} {...register('patientName')} />
       </FormRow>

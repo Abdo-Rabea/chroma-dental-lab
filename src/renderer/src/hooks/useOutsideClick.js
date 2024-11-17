@@ -12,10 +12,12 @@ export function useOutsideClick(handler, listenCapturing = true) {
   useEffect(
     function () {
       function handleClick(e) {
-        if (ref.current && !ref.current.contains(e.target)) {
+        const el = document.querySelector('.MuiPickersLayout-contentWrapper') ?? null;
+
+        if (ref.current && !ref.current.contains(e.target) && !el?.contains(e.target)) {
           clearTimeout(timeoutRef.current);
           timeoutRef.current = setTimeout(() => {
-            console.log('cloosing');
+            // console.log('cloosing');
             handler();
           }, 0);
         }
@@ -23,7 +25,7 @@ export function useOutsideClick(handler, listenCapturing = true) {
       document.addEventListener('click', handleClick, listenCapturing);
 
       return () => {
-        document.removeEventListener('click', handleClick);
+        document.removeEventListener('click', handleClick, listenCapturing);
         clearTimeout(timeoutRef.current);
       };
     },

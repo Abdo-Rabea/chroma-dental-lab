@@ -38,8 +38,6 @@ function AddPurchaseForm({ onCloseModal }) {
     handleSubmit,
     reset,
     setValue,
-    setError,
-    clearErrors,
     control,
     watch,
     formState: { errors }
@@ -63,14 +61,12 @@ function AddPurchaseForm({ onCloseModal }) {
   const quantity = watch('quantity', 1);
   const totalPrice = productPrice * quantity;
 
-  console.log(errors);
   function onSubmit(data) {
-    console.log('form', data.date);
-    return;
     const purchaseData = {
       productId: Number(data.productName),
       billId: Number(billId),
       ...data,
+      date: dayjs(data.date).format('YYYY-MM-DD HH:mm:ss'),
       quantity: Number(data.quantity),
       productName: productMap.get(Number(data.productName))?.name
     };

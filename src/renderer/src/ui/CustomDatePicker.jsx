@@ -4,16 +4,17 @@ import { DesktopDatePicker, LocalizationProvider, PickersLayout } from '@mui/x-d
 import { TextField } from '@mui/material';
 
 import styled from 'styled-components';
-import { useState } from 'react';
-import dayjs from 'dayjs';
-import { formatTimestampToDate } from '../utils/helpers';
 
 const commonBordersetStyles = {
   border: '1.6px solid var(--color-grey-300)',
   borderRadius: 'var(--border-radius-sm)'
 };
 
-const StyledCustomDatePicker = styled.div``;
+const StyledCustomDatePicker = styled.div`
+  & > div {
+    width: 100%;
+  }
+`;
 // to stlye the input date element
 const StyledTextField = styled(TextField)({
   '& .MuiInputBase-root': {

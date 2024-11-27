@@ -3,10 +3,10 @@ var db = dbmgr.db;
 
 function createDeposit(depositData) {
   //* this ensures scalability
-  const { doctorId, billId, amount } = depositData;
+  const { doctorId, billId, amount, date } = depositData;
   const insertDeposit = db.prepare(`
       INSERT INTO deposits (billId, doctorId, amount, createdAt) 
-      VALUES (?, ?, ?, datetime('now', 'localtime'))
+      VALUES (?, ?, ?, ?)
   `);
 
   //* it is better to handle it here as it is a transaction
@@ -16,21 +16,21 @@ function createDeposit(depositData) {
       WHERE id = ?
   `);
 
-  const transaction = db.transaction((doctorId, billId, amount) => {
+  const transaction = db.transaction((doctorId, billId, amount, date) => {
     // Insert the deposit
-    insertDeposit.run(billId, doctorId, amount);
+    insertDeposit.run(billId, doctorId, amount, date);
 
     // Update the doctor's balance
     updateDoctorBalance.run(amount, doctorId);
   });
 
-  transaction(doctorId, billId, amount);
+  transaction(doctorId, billId, amount, date);
 }
 
 function getDepositsByBillId(billId) {
   const stmt = db.prepare(`
     SELECT * FROM deposits
-    WHERE billId = ?;
+    WHERE billId = ? ORDER BY createdAt DESC;
   `);
   return stmt.all(billId);
 }

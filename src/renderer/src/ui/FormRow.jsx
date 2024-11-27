@@ -38,7 +38,7 @@ const StyledFormRow = styled.div`
       flex-direction: column;
       row-gap: 5px;
       width: 30rem;
-      margin-top: 2rem;
+      margin-top: 1rem;
     `}
 `;
 

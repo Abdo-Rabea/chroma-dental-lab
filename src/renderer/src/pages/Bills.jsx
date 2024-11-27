@@ -33,7 +33,6 @@ function Bills() {
       <Row>
         <BillsTable searchQuery={searchQuery} />
       </Row>
-      <CustomDatePicker />
     </>
   );
 }

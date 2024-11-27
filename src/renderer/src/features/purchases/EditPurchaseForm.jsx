@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
@@ -12,6 +12,8 @@ import { formatCurrency } from '../../utils/helpers';
 import { useParams } from 'react-router-dom';
 import { useEditPurchase } from './useEditPurchase';
 import { useState } from 'react';
+import CustomDatePicker from '../../ui/CustomDatePicker';
+import dayjs from 'dayjs';
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -39,9 +41,14 @@ function EditPurchaseForm({ onCloseModal, purchase }) {
     reset,
     setValue,
     watch,
+    control,
     formState: { errors, isDirty }
   } = useForm({
-    defaultValues: { ...purchase, productName: purchase.productId }
+    defaultValues: {
+      ...purchase,
+      productName: purchase.productId,
+      date: dayjs(purchase.createdAt) || dayjs()
+    }
   });
 
   const { billId } = useParams();
@@ -74,6 +81,7 @@ function EditPurchaseForm({ onCloseModal, purchase }) {
   function onSubmit(data) {
     const purchaseData = {
       ...data,
+      date: dayjs(data.date).format('YYYY-MM-DD HH:mm:ss'),
       billId: Number(billId),
       purchaseId: purchase.id,
       productId: Number(data.productName),
@@ -110,7 +118,20 @@ function EditPurchaseForm({ onCloseModal, purchase }) {
           ))}
         </Select>
       </FormRow>
-
+      <FormRow label="التاريخ" id="date" error={errors?.date?.message}>
+        <Controller
+          name="date"
+          control={control}
+          rules={{
+            required: 'يجب إدخال التاريخ',
+            validate: (value) =>
+              !value || isNaN(new Date(value).getTime()) ? 'أدخل التاريخ بصورة صحيحة' : true
+          }}
+          render={({ field: { onChange, value } }) => (
+            <CustomDatePicker value={value} onChange={onChange} />
+          )}
+        />
+      </FormRow>
       <FormRow label="اسم المريض" error={errors?.patientName?.message}>
         <Input type="text" id="patientName" disabled={false} {...register('patientName')} />
       </FormRow>

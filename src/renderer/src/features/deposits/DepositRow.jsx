@@ -8,9 +8,9 @@ import { useDeleteDeposit } from './useDeleteDeposit';
 const DateTime = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
-  display: flex;
+  /* display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center; */
   @media print {
     font-size: 1.4rem;
   }
@@ -39,7 +39,7 @@ function DepositRow({ deposit, isActiveBill }) {
   return (
     <Table.Row role="row">
       <DateTime>
-        <Time>{time}</Time>
+        {/* <Time>{time}</Time> */}
         <Date>{date}</Date>
       </DateTime>
       <Amount>{formatCurrency(amount)}</Amount>

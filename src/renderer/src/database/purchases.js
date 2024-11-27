@@ -4,7 +4,7 @@ var db = dbmgr.db;
 function getBillPurchases(billId) {
   const stmt = db.prepare(`
     SELECT * FROM purchases
-    WHERE billId = ?
+    WHERE billId = ? ORDER BY createdAt DESC;
   `);
 
   const purchases = stmt.all(billId);
@@ -19,7 +19,8 @@ function createPurchase(purchaseData) {
     productPrice,
     quantity,
     color = null,
-    patientName = null
+    patientName = null,
+    date
   } = purchaseData;
 
   // Begin transaction to ensure both operations happen atomically
@@ -27,11 +28,20 @@ function createPurchase(purchaseData) {
     // Insert the purchase
     const insertPurchase = db.prepare(`
       INSERT INTO purchases (
-        billId, productId, productName, productPrice, quantity, color, patientName
-      ) VALUES (?, ?, ?, ?, ?, ?, ?);
+        billId, productId, productName, productPrice, quantity, color, patientName, createdAt
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
     `);
 
-    insertPurchase.run(billId, productId, productName, productPrice, quantity, color, patientName);
+    insertPurchase.run(
+      billId,
+      productId,
+      productName,
+      productPrice,
+      quantity,
+      color,
+      patientName,
+      date
+    );
 
     // Update the bill's totalPrice and totalQuantity
     const updateBill = db.prepare(`
@@ -90,6 +100,7 @@ function updatePurchase(purchaseData) {
     productName,
     productPrice,
     quantity,
+    date,
     color = null,
     patientName = null
   } = purchaseData;
@@ -97,11 +108,20 @@ function updatePurchase(purchaseData) {
   // Update the specific purchase
   const updateStmt = db.prepare(`
     UPDATE purchases
-    SET productId=?, productName = ?, productPrice = ?, quantity = ?, color = ?, patientName = ?
+    SET productId=?, productName = ?, productPrice = ?, quantity = ?, color = ?, patientName = ?, createdAt = ?
     WHERE id = ?
   `);
 
-  updateStmt.run(productId, productName, productPrice, quantity, color, patientName, purchaseId);
+  updateStmt.run(
+    productId,
+    productName,
+    productPrice,
+    quantity,
+    color,
+    patientName,
+    date,
+    purchaseId
+  );
 
   // Update totalPrice and totalQuantity for the corresponding bill
   const billUpdateStmt = db.prepare(`

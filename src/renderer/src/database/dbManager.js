@@ -71,12 +71,12 @@ db.exec(`
   );
 `);
 
-// delete bill with deactivated after 1 monthes
-db.exec(`
-  DELETE FROM Bills 
-  WHERE deactivatedAt IS NOT NULL 
-  AND deactivatedAt <= DATE('now', '-1 month', 'localtime');
-`);
+// ! customer remove this delete bill with deactivated after 1 monthes (insert pagination)
+// db.exec(`
+//   DELETE FROM Bills
+//   WHERE deactivatedAt IS NOT NULL
+//   AND deactivatedAt <= DATE('now', '-1 month', 'localtime');
+// `);
 
 // triggers
 db.exec(`

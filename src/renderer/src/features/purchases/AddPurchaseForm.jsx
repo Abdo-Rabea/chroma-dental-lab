@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import Form from '../../ui/Form';
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
@@ -12,6 +12,7 @@ import { formatCurrency } from '../../utils/helpers';
 import { useParams } from 'react-router-dom';
 import { useAddPurchase } from './useAddPurchase';
 import CustomDatePicker from '../../ui/CustomDatePicker';
+import dayjs from 'dayjs';
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -37,9 +38,16 @@ function AddPurchaseForm({ onCloseModal }) {
     handleSubmit,
     reset,
     setValue,
+    setError,
+    clearErrors,
+    control,
     watch,
     formState: { errors }
-  } = useForm({});
+  } = useForm({
+    defaultValues: {
+      date: dayjs() // Set default date value here
+    }
+  });
   const { billId } = useParams();
   const { isLoading, products, error } = useProducts();
   const { addPurchase, isAddingPurchase } = useAddPurchase();
@@ -55,7 +63,10 @@ function AddPurchaseForm({ onCloseModal }) {
   const quantity = watch('quantity', 1);
   const totalPrice = productPrice * quantity;
 
+  console.log(errors);
   function onSubmit(data) {
+    console.log('form', data.date);
+    return;
     const purchaseData = {
       productId: Number(data.productName),
       billId: Number(billId),
@@ -70,6 +81,7 @@ function AddPurchaseForm({ onCloseModal }) {
       }
     });
   }
+
   return (
     <StyledForm type="modal" onSubmit={handleSubmit(onSubmit)}>
       <FormRow label="نوع الحالة" error={errors?.productName?.message}>
@@ -98,8 +110,19 @@ function AddPurchaseForm({ onCloseModal }) {
         </Select>
       </FormRow>
 
-      <FormRow label="التاريخ" error={'hello'}>
-        <CustomDatePicker />
+      <FormRow label="التاريخ" id="date" error={errors?.date?.message}>
+        <Controller
+          name="date"
+          control={control}
+          rules={{
+            required: 'يجب إدخال التاريخ',
+            validate: (value) =>
+              !value || isNaN(new Date(value).getTime()) ? 'أدخل التاريخ بصورة صحيحة' : true
+          }}
+          render={({ field: { onChange, value } }) => (
+            <CustomDatePicker value={value} onChange={onChange} />
+          )}
+        />
       </FormRow>
       <FormRow label="اسم المريض" error={errors?.patientName?.message}>
         <Input type="text" id="patientName" disabled={false} {...register('patientName')} />

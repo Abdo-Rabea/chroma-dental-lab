@@ -9,7 +9,7 @@ import dayjs from 'dayjs';
 import { formatTimestampToDate } from '../utils/helpers';
 
 const commonBordersetStyles = {
-  border: '2px solid var(--color-grey-300)',
+  border: '1.6px solid var(--color-grey-300)',
   borderRadius: 'var(--border-radius-sm)'
 };
 
@@ -20,6 +20,7 @@ const StyledTextField = styled(TextField)({
     backgroundColor: 'var(--color-grey-0)',
     boxShadow: 'var(--shadow-sm)',
     color: 'var(--color-grey-700)',
+    paddingRight: '0',
     '& fieldset': {
       ...commonBordersetStyles
     },
@@ -27,7 +28,7 @@ const StyledTextField = styled(TextField)({
       ...commonBordersetStyles
     },
     '&.Mui-focused fieldset': {
-      border: '2px solid var(--color-brand-600)'
+      border: '1.6px solid var(--color-brand-600)'
     }
   },
   '& .MuiInputBase-root svg': {
@@ -36,8 +37,9 @@ const StyledTextField = styled(TextField)({
     height: '16px'
   },
   '& .MuiInputBase-input': {
-    fontSize: '1.2rem', // Increase font size
-    padding: '12px' // Adjust padding for better alignment
+    fontSize: '1.35rem', // Increase font size
+    padding: '12px', // Adjust padding for better alignment
+    fontFamily: 'Tajawal-Medium'
   }
 });
 
@@ -46,7 +48,8 @@ const StyledPickersLayout = styled(PickersLayout)({
   '.MuiDateCalendar-root': {
     direction: 'ltr',
     backgroundColor: 'var(--color-grey-0)',
-    color: 'var(--color-grey-700)'
+    color: 'var(--color-grey-700)',
+    fontFamily: 'Tajawal-Medium'
   },
   // any svg
   '.MuiPickersCalendarHeader-root svg': {
@@ -81,26 +84,23 @@ const StyledPickersLayout = styled(PickersLayout)({
   '& .MuiTypography-root': {
     fontSize: '1.2rem', // General typography size adjustment
     color: 'var(--color-grey-700)'
+  },
+  '.MuiPickersYear-root > button': {
+    fontSize: '1.2rem'
   }
+  // "& .MuiPickersMonth-root":
 });
-function CustomDatePicker() {
-  const [value, setValue] = useState(dayjs('2024-11-17'));
-  try {
-    console.log(value.toISOString());
-  } catch (e) {
-    console.log(e);
-  }
-  const handleDatePickerClick = (event) => {
-    event.stopPropagation(); // Prevent the click event from reaching the parent modal
-  };
+function CustomDatePicker({ onChange, value, ...props }) {
   return (
     <StyledCustomDatePicker>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DesktopDatePicker
-          onClick={handleDatePickerClick}
           format="YYYY-MM-DD"
           value={value}
-          onChange={(newValue) => setValue(newValue)}
+          onChange={(newValue) => {
+            onChange(newValue);
+          }}
+          {...props}
           // slotProps={{
           //   field: { clearable: true, onClear: () => {} }
           // }}

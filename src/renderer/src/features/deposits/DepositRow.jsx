@@ -5,6 +5,7 @@ import Modal from '../../ui/Modal';
 import Button from '../../ui/Button';
 import ConfirmDelete from '../../ui/ConfirmDelete';
 import { useDeleteDeposit } from './useDeleteDeposit';
+const valueFontPrintSize = '1.1rem';
 const DateTime = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
@@ -12,7 +13,7 @@ const DateTime = styled.div`
   flex-direction: column;
   justify-content: center; */
   @media print {
-    font-size: 1.4rem;
+    font-size: ${valueFontPrintSize};
   }
 `;
 const Time = styled.div`
@@ -24,6 +25,9 @@ const Date = styled.div`
 
 const Amount = styled.div`
   font-weight: 600;
+  @media print {
+    font-size: ${valueFontPrintSize};
+  }
 `;
 const ButtonContainer = styled.div`
   display: flex;

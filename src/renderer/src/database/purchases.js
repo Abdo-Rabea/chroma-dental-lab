@@ -4,7 +4,7 @@ var db = dbmgr.db;
 function getBillPurchases(billId) {
   const stmt = db.prepare(`
     SELECT * FROM purchases
-    WHERE billId = ? ORDER BY createdAt DESC;
+    WHERE billId = ? ORDER BY createdAt ASC;
   `);
 
   const purchases = stmt.all(billId);

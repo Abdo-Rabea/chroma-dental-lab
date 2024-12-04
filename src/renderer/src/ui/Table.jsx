@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import styled, { css } from 'styled-components';
-
+const printBorderStyle = '2px solid var(--color-grey-700)';
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
   font-size: 1.4rem;
@@ -16,6 +16,7 @@ const StyledTable = styled.div`
     width: fit-content;
     overflow: unset;
     overflow-wrap: anywhere;
+    border: ${printBorderStyle};
   }
 `;
 
@@ -64,7 +65,7 @@ const CommonRow = styled.div`
       text-align: center;
       height: 100%;
       /* padding: 5px; */
-      border-left: 1px solid var(--color-grey-100);
+      border-left: ${printBorderStyle};
     }
     & > :first-child {
       padding-left: 2px;
@@ -82,6 +83,8 @@ const CommonRow = styled.div`
 `;
 
 const StyledHeader = styled(CommonRow)`
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
   padding: 1.6rem 2.4rem;
   background-color: var(--color-grey-50);
   border-bottom: 1px solid var(--color-grey-100);
@@ -92,6 +95,9 @@ const StyledHeader = styled(CommonRow)`
   color: var(--color-grey-600);
   @media print {
     padding: 0;
+    border-bottom: ${printBorderStyle};
+    background-color: transparent;
+    color: var(--color-grey-800);
   }
 `;
 
@@ -103,6 +109,10 @@ const StyledRow = styled(CommonRow)`
   }
   @media print {
     padding: 0;
+    background-color: transparent;
+    &:not(:last-child) {
+      border-bottom: ${printBorderStyle};
+    }
   }
 `;
 
@@ -114,7 +124,13 @@ const StyledBody = styled.section`
 `;
 
 const Footer = styled.footer`
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
   background-color: var(--color-grey-50);
+  @media print {
+    border-top: ${printBorderStyle};
+    background-color: transparent;
+  }
   /* display: flex;
   justify-content: flex-start; */
   /* align-items: center; */
@@ -135,9 +151,17 @@ const Empty = styled.p`
 
 const TableContext = createContext();
 
-function Table({ columns, children, maxwidth, width, printcolumns, hidelastcolumn = false }) {
+function Table({
+  columns,
+  children,
+  maxwidth,
+  width,
+  printcolumns,
+  tableRole, // not used (it was used to stlye last row for the desposit row)
+  hidelastcolumn = false
+}) {
   return (
-    <TableContext.Provider value={{ columns, maxwidth, printcolumns, hidelastcolumn }}>
+    <TableContext.Provider value={{ columns, maxwidth, printcolumns, hidelastcolumn, tableRole }}>
       <StyledTable width={width} role="table">
         {children}
       </StyledTable>
@@ -161,7 +185,7 @@ function Header({ children }) {
   );
 }
 function Row({ children }) {
-  const { columns, maxwidth, printcolumns, hidelastcolumn } = useContext(TableContext);
+  const { columns, maxwidth, printcolumns, hidelastcolumn, tableRole } = useContext(TableContext);
   return (
     <StyledRow
       role="row"
@@ -169,6 +193,7 @@ function Row({ children }) {
       maxwidth={maxwidth}
       printcolumns={printcolumns}
       hidelastcolumn={hidelastcolumn}
+      tableRole={tableRole}
     >
       {children}
     </StyledRow>

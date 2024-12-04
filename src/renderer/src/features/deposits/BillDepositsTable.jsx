@@ -1,9 +1,16 @@
+import styled from 'styled-components';
 import Error from '../../ui/Error';
 import NoDataFound from '../../ui/NoDataFound';
 import Table from '../../ui/Table';
 import DepositRow from './DepositRow';
 import { useBillDeposits } from './useBillDeposits';
+const headingPrintFontSize = '1.3rem';
 
+const TableHeading = styled.div`
+  @media print {
+    font-size: ${headingPrintFontSize};
+  }
+`;
 function BillDepositsTable({ isActiveBill }) {
   const { isLoading, deposits, error } = useBillDeposits();
   if (isLoading) return;
@@ -13,13 +20,14 @@ function BillDepositsTable({ isActiveBill }) {
       <Table
         columns="150px 100px auto"
         width="fit-content"
-        printcolumns="80px 77px"
+        printcolumns="70px 70px"
         hidelastcolumn={isActiveBill === false}
+        tableRole="depositsTable"
       >
         <Table.Header>
-          <div>التاريخ</div>
-          <div>المبلغ</div>
-          <div>الأكشن</div>
+          <TableHeading>التاريخ</TableHeading>
+          <TableHeading>المبلغ</TableHeading>
+          <TableHeading>الأكشن</TableHeading>
         </Table.Header>
 
         {deposits.length === 0 && <NoDataFound />}

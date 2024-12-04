@@ -23,9 +23,9 @@ import '../../styles/fonts.css';
 import LabContactInfo from '../../ui/LabContactInfo';
 import { useSaveBill } from './useSaveBill';
 import { useCreateBill } from './useCreateBill';
-import ConfirmDelete from '../../ui/ConfirmDelete';
 import ConfirmCreate from '../../ui/ConfirmCreate';
 // just for bill
+const headingPrintFontSize = '1.32rem'; // 1.3
 const StyledBillDetails = styled.div`
   display: flex;
   flex-direction: column;
@@ -37,7 +37,7 @@ const StyledBillDetails = styled.div`
     display: flex;
     page-break-before: always;
     /* zoom: 62%; */
-
+    /* font-size: 0.5rem; */
     button {
       display: none;
     }
@@ -74,13 +74,20 @@ const BillContainer = styled.div`
 const PrintTitle = styled.div`
   text-align: center;
   font-weight: 600;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   color: var(--color-grey-600);
   display: none;
   @media print {
     display: block;
   }
 `;
+
+const TableHeading = styled.div`
+  @media print {
+    font-size: ${headingPrintFontSize};
+  }
+`;
+
 const BillActions = styled.div`
   display: flex;
   gap: 1.2rem;
@@ -93,13 +100,12 @@ const Summary = styled.div`
   display: flex;
   gap: 1.2rem;
   //todo: which is better (just comment print media and make screen for all)
-  @media screen {
-    & > div {
-      flex-wrap: wrap;
-    }
+  & > div {
+    flex-wrap: wrap;
   }
   @media print {
-    flex-direction: column;
+    /* flex-direction: column; */
+    align-items: flex-start;
   }
 `;
 const SummaryBox = styled.div`
@@ -111,9 +117,11 @@ const SummaryBox = styled.div`
   border-radius: 7px;
   font-size: 1.5rem;
   flex-grow: 1;
-
   @media print {
-    font-size: 1.42rem;
+    font-size: ${headingPrintFontSize};
+    border-radius: 5px;
+    border: 1.5px solid var(--color-grey-700);
+    background-color: var(--color-grey-50);
   }
 `;
 const Label = styled.div`
@@ -208,20 +216,23 @@ function BillDetails() {
         <BillContainer>
           <PrintTitle>تفاصيل التركيبات</PrintTitle>
           <Menus>
-            <Table
-              columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
-              printcolumns="140px 80px 100px 50px 85px 50px 80px"
+            <Table // +17 - 65 + 10 + 10 + 10 + 10 + 10 + 7
+              columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
+              // printcolumns="80px 140px 80px 100px 50px 85px 50px 80px" //20 20 20 5
+              printcolumns="65px 130px 70px 90px 40px 77px 50px 80px" //20 20 20 5
+              // printcolumns="65px 120px 60px 80px 45px 85px 50px 80px"
               hidelastcolumn={!isActiveBill}
             >
               <Table.Header>
-                <div>نوع الحالة</div>
-                <div>التاريخ</div>
-                <div>اسم المريض</div>
-                <div>اللون</div>
-                <div>سعر المنتج</div>
-                <div>الكمية</div>
-                <div>الإجمالي</div>
-                <div>الأكشن</div>
+                <TableHeading>رقم الحالة</TableHeading>
+                <TableHeading>نوع الحالة</TableHeading>
+                <TableHeading>التاريخ</TableHeading>
+                <TableHeading>اسم المريض</TableHeading>
+                <TableHeading>اللون</TableHeading>
+                <TableHeading>سعر المنتج</TableHeading>
+                <TableHeading>الكمية</TableHeading>
+                <TableHeading>الإجمالي</TableHeading>
+                <TableHeading>الأكشن</TableHeading>
               </Table.Header>
 
               {purchases.length === 0 && <NoDataFound />}

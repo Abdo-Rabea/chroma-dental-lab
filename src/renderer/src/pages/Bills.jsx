@@ -4,7 +4,6 @@ import Heading from '../ui/Heading';
 import Input from '../ui/Input';
 import Row from '../ui/Row';
 import { useSearchParams } from 'react-router-dom';
-import CustomDatePicker from '../ui/CustomDatePicker';
 
 function Bills() {
   //* you will redirect here to show all bills for specific doctor bills:/doctorId

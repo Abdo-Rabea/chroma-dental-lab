@@ -30,7 +30,7 @@ function createDeposit(depositData) {
 function getDepositsByBillId(billId) {
   const stmt = db.prepare(`
     SELECT * FROM deposits
-    WHERE billId = ? ORDER BY createdAt DESC;
+    WHERE billId = ? ORDER BY createdAt ASC;
   `);
   return stmt.all(billId);
 }

@@ -8,18 +8,22 @@ import { RiEdit2Fill } from 'react-icons/ri';
 import EditPurchaseForm from '../purchases/EditPurchaseForm';
 import { useDeletePurchase } from '../purchases/useDeletePurchase';
 import ConfirmDelete from '../../ui/ConfirmDelete';
-
+const printValueFontSize = '1.2rem';
 const ProductName = styled.div`
   font-size: 1.6rem;
   direction: ltr;
   @media print {
-    font-size: inherit;
+    font-size: 1.3rem; // inherit but i want to increase
+    /* font-size: ${printValueFontSize}; */
   }
   font-weight: 600;
   color: var(--color-grey-600);
 `;
 const CommonRow = styled.div`
   font-weight: 600;
+  @media print {
+    font-size: ${printValueFontSize};
+  }
 `;
 function BillRow({ purchase }) {
   const { deletePurchase, isDeletingPurchase } = useDeletePurchase();
@@ -39,6 +43,7 @@ function BillRow({ purchase }) {
 
   return (
     <Table.Row role="row">
+      <CommonRow>{1234}</CommonRow>
       <ProductName>{productName}</ProductName>
       <CommonRow>{formatTimestampToDate(createdAt)} </CommonRow>
       {patientName ? <CommonRow>{patientName} </CommonRow> : <span>&mdash;</span>}

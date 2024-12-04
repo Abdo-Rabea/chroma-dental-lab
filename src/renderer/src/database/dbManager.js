@@ -38,6 +38,7 @@ db.exec(`
 db.exec(`
   CREATE TABLE IF NOT EXISTS purchases (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    statusNumber INTEGER,
     billId INTEGER NOT NULL,
     productId INTEGER NOT NULL,
     productName TEXT NOT NULL,

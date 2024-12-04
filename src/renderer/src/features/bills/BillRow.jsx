@@ -29,6 +29,7 @@ function BillRow({ purchase }) {
   const { deletePurchase, isDeletingPurchase } = useDeletePurchase();
   const {
     id: purchaseId,
+    statusNumber,
     productName,
     productPrice,
     quantity,
@@ -43,7 +44,7 @@ function BillRow({ purchase }) {
 
   return (
     <Table.Row role="row">
-      <CommonRow>{1234}</CommonRow>
+      {statusNumber ? <CommonRow>{statusNumber}</CommonRow> : <span>&mdash;</span>}
       <ProductName>{productName}</ProductName>
       <CommonRow>{formatTimestampToDate(createdAt)} </CommonRow>
       {patientName ? <CommonRow>{patientName} </CommonRow> : <span>&mdash;</span>}

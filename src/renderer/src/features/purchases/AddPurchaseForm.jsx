@@ -80,6 +80,19 @@ function AddPurchaseForm({ onCloseModal }) {
 
   return (
     <StyledForm type="modal" onSubmit={handleSubmit(onSubmit)}>
+      <FormRow label="رقم الحالة" error={errors?.statusNumber?.message}>
+        <Input
+          type="text"
+          id="statusNumber"
+          disabled={false}
+          {...register('statusNumber', {
+            pattern: {
+              value: /^(0|[1-9]\d*)$/,
+              message: 'يجب إدخال رقم الحالة بصورة صحيحة'
+            }
+          })}
+        />
+      </FormRow>
       <FormRow label="نوع الحالة" error={errors?.productName?.message}>
         {/* //*product value is the id */}
         <Select

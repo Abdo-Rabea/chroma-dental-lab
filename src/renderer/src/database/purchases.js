@@ -14,6 +14,7 @@ function getBillPurchases(billId) {
 function createPurchase(purchaseData) {
   const {
     billId,
+    statusNumber = null,
     productId,
     productName,
     productPrice,
@@ -28,12 +29,13 @@ function createPurchase(purchaseData) {
     // Insert the purchase
     const insertPurchase = db.prepare(`
       INSERT INTO purchases (
-        billId, productId, productName, productPrice, quantity, color, patientName, createdAt
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+        billId, statusNumber, productId, productName, productPrice, quantity, color, patientName, createdAt
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
     `);
 
     insertPurchase.run(
       billId,
+      statusNumber,
       productId,
       productName,
       productPrice,
@@ -96,6 +98,7 @@ function updatePurchase(purchaseData) {
   const {
     purchaseId,
     billId,
+    statusNumber,
     productId,
     productName,
     productPrice,
@@ -108,12 +111,13 @@ function updatePurchase(purchaseData) {
   // Update the specific purchase
   const updateStmt = db.prepare(`
     UPDATE purchases
-    SET productId=?, productName = ?, productPrice = ?, quantity = ?, color = ?, patientName = ?, createdAt = ?
+    SET productId=?, statusNumber = ?, productName = ?, productPrice = ?, quantity = ?, color = ?, patientName = ?, createdAt = ?
     WHERE id = ?
   `);
 
   updateStmt.run(
     productId,
+    statusNumber,
     productName,
     productPrice,
     quantity,

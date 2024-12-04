@@ -98,6 +98,9 @@ function EditPurchaseForm({ onCloseModal, purchase }) {
 
   return (
     <StyledForm type="modal" onSubmit={handleSubmit(onSubmit)}>
+      <FormRow label="رقم الحالة" error={errors?.statusNumber?.message}>
+        <Input type="text" id="statusNumber" disabled={false} {...register('statusNumber')} />
+      </FormRow>
       <FormRow label="نوع الحالة" error={errors?.productName?.message}>
         {/* //*product value is the id */}
         <Select

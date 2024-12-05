@@ -6,9 +6,19 @@ export async function getBillById(id) {
   }
 }
 
-export async function getAllBills() {
+// pagination constraints
+export async function getAllBills(constraints) {
   try {
-    return await window.bills.getAllBills();
+    return await window.bills.getAllBills(constraints);
+  } catch (err) {
+    throw new Error('تعذر تحميل الفواتير');
+  }
+}
+
+// pagination constraints
+export async function getBillsCount() {
+  try {
+    return await window.bills.getBillsCount();
   } catch (err) {
     throw new Error('تعذر تحميل الفواتير');
   }

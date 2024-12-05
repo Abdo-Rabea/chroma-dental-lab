@@ -38,7 +38,8 @@ contextBridge.exposeInMainWorld('bills', {
   getBillById: billOperations.getBillById,
   updateBillAndDoctorBalance: billOperations.updateBillAndDoctorBalance,
   getAllBills: billOperations.getAllBills,
-  deleteBill: billOperations.deleteBill
+  deleteBill: billOperations.deleteBill,
+  getBillsCount: billOperations.getBillsCount
 });
 
 contextBridge.exposeInMainWorld('deposits', {

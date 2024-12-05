@@ -103,7 +103,27 @@ function updateBillAndDoctorBalance(data) {
   transaction();
 }
 
-function getAllBills() {
+// not used as i need to dynamiclly calc. count of each query
+function getBillsCount() {
+  const stmt = db.prepare('SELECT COUNT(*) AS totalRows FROM bills');
+  return stmt.get().totalRows;
+}
+
+function getAllBills({ filterByDoctorName = '', currentPage = 1, PAGE_SIZE = 1 }) {
+  const offset = (currentPage - 1) * PAGE_SIZE;
+  const filter = `%${filterByDoctorName}%`;
+
+  const countQuery = `
+    SELECT COUNT(1) AS count
+    FROM bills
+    WHERE bills.doctorId IN (
+      SELECT id 
+      FROM doctors 
+      WHERE doctors.fullName LIKE ?
+    );
+  `;
+  const { count } = db.prepare(countQuery).get(filter);
+
   const query = `
     SELECT
       bills.id ,
@@ -118,13 +138,14 @@ function getAllBills() {
       doctors.balance
     FROM bills
     JOIN doctors ON bills.doctorId = doctors.id
-    ORDER BY bills.createdAt DESC
+    WHERE doctors.fullName LIKE ? 
+    ORDER BY bills.createdAt DESC LIMIT ? OFFSET ?;
   `;
 
-  const rows = db.prepare(query).all();
+  const rows = db.prepare(query).all(filter, PAGE_SIZE, offset);
 
   // Map the results to the desired format
-  return rows.map((row) => ({
+  const data = rows.map((row) => ({
     id: row.id,
     totalPrice: row.totalPrice,
     totalQuantity: row.totalQuantity,
@@ -138,6 +159,7 @@ function getAllBills() {
       balance: row.balance
     }
   }));
+  return { data, count };
 }
 
 /**
@@ -179,5 +201,6 @@ module.exports = {
   createBill,
   updateBillAndDoctorBalance,
   getAllBills,
-  deleteBill
+  deleteBill,
+  getBillsCount
 };

@@ -1,3 +1,4 @@
+export const PAGE_SIZE = 10;
 export const PRICE_CONSTRAINTS = {
   required: 'يجب ادخال السعر',
   min: {
